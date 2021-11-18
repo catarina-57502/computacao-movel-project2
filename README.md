@@ -2,7 +2,7 @@
 
 ## Features Planeadas
 
-Login/Registo
+Login/Registo\n
 Mapas com marcação dos locais
 Mostrar/Guardar as fotos tiradas nos locais
 Permite classificar os locais
