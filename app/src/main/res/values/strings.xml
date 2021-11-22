@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Shotop</string>
+    <string name="app_name">SHOTOP</string>
+    <string name="splashString">Bem-Vindo!</string>
+    <string name="mainTextWelcome">Aqui irá nascer o shotop</string>
 </resources>
