@@ -11,4 +11,17 @@
     <string name="registar">Registar</string>
     <string name="email">Email</string>
     <string name="nome">Nome</string>
+    <string name="email_hint">johndoe@example.com</string>
+    <string name="password_hint">*******</string>
+    <string name="welcome_login2">Entre na sua conta Shotop</string>
+    <string name="welcome_login1">Bem-vindo de volta!</string>
+    <string name="email_label">Email</string>
+    <string name="password_label">Password</string>
+    <string name="login_button">LOGIN</string>
+    <string name="outro_logins_label">Ou conecte-se com</string>
+    <string name="facebook">Facebook</string>
+    <string name="google">Google</string>
+    <string name="dont_have_account">Não tem uma conta?</string>
+    <string name="register_link_text">Registar</string>
+    <string name="search">Pesquisa…</string>
 </resources>
