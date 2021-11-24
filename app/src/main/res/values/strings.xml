@@ -4,6 +4,13 @@
     <string name="mainTextWelcome">Aqui irá nascer o shotop</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="faz_o_teu_registo">Faz o teu registo!</string>
+    <string name="password">Password</string>
+    <string name="confirmar_password">Confirmar Password</string>
+    <string name="regista_te_no_shotop_de_modo_a_acederes_a_todas_as_funcionalidades">Regista-te no Shotop de modo a acederes a todas as funcionalidades</string>
+    <string name="registar">Registar</string>
+    <string name="email">Email</string>
+    <string name="nome">Nome</string>
     <string name="email_hint">johndoe@example.com</string>
     <string name="password_hint">*******</string>
     <string name="welcome_login2">Entre na sua conta Shotop</string>
