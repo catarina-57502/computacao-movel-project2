@@ -2,4 +2,6 @@
     <string name="app_name">SHOTOP</string>
     <string name="splashString">Bem-Vindo!</string>
     <string name="mainTextWelcome">Aqui irá nascer o shotop</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
