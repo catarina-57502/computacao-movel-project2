@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="pt.fcul.cm2021.grupo9.shotop">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_logo"
@@ -11,7 +14,8 @@
         android:theme="@style/Theme.Shotop">
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/LoadingTheme"/>
         <activity
             android:name=".SplashActivity"
             android:exported="true"
@@ -21,6 +25,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCrYJ1In2bgVDaK9vI0sLBZOA234Sf1cCU"/>
     </application>
 
 </manifest>

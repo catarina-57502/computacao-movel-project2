@@ -12,12 +12,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <SearchView
-        android:id="@+id/simpleSearchView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:iconifiedByDefault="false"
-        android:queryHint="Search Here" />
+   <LinearLayout
+       android:layout_margin="20dp"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:background="@color/white"
+
+       android:layout_gravity="top |center">
+
+       <SearchView
+
+           android:id="@+id/searchView"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:iconifiedByDefault="false"
+           android:queryHint="Search Here" />
+
+   </LinearLayout>
 
 
 </FrameLayout>
