@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         //create bottom navigation view object
 
         setContentView(R.layout.activity_main);
-
+        getSupportActionBar().hide();
 
         //#TODO podem alterar para o vosso fragmento ser o primeiro a abrir
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_LOGIN);
