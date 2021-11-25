@@ -28,6 +28,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MapaFragment extends Fragment   {
 
@@ -43,6 +44,9 @@ public class MapaFragment extends Fragment   {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_mapa, container, false);
+
+        BottomNavigationView b = getActivity().findViewById(R.id.bottom_navigatin_view);
+        b.setVisibility( View.VISIBLE);
 
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);

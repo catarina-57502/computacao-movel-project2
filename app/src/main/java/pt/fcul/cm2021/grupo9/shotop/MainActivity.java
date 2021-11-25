@@ -16,6 +16,8 @@ import android.os.Bundle;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG_MAPS = "MAPS";
+    public static final String TAG_LOGIN = "LOGIN";
+    public static final String TAG_REGISTO = "REGISTO";
 
     FragmentManager fragmentManager = getSupportFragmentManager();
     FragmentTransaction fragmentTransaction;
@@ -31,12 +33,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         //#TODO podem alterar para o vosso fragmento ser o primeiro a abrir
-        Fragment fragmentMaps = getSupportFragmentManager().findFragmentByTag(TAG_MAPS);
-        if (fragmentMaps == null) {
-            fragmentMaps = new MapaFragment();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_LOGIN);
+        if (fragment == null) {
+            fragment = new LoginFragment();
         }
         fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frameFragment, fragmentMaps, TAG_MAPS);
+        fragmentTransaction.replace(R.id.frameFragment, fragment, TAG_LOGIN);
         fragmentTransaction.commit();
 
 

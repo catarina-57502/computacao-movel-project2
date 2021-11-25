@@ -15,7 +15,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="172dp"
+            android:layout_height="120dp"
             android:src="@drawable/logo" />
 
         <TextView
@@ -31,14 +31,13 @@
 
         <TextView
             android:id="@+id/text_view2"
-            android:text="@string/welcome_login2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
             android:layout_gravity="center"
-            android:textColor="@color/blue"
             android:layout_marginBottom="20dp"
-            />
+            android:text="@string/welcome_login2"
+            android:textColor="@color/blue"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/email_label"
@@ -102,7 +101,7 @@
             android:layout_gravity="center"
             android:background="@drawable/rondedbutton"
             android:text="@string/login_button"
-            android:layout_marginBottom="25dp"/>
+            android:layout_marginBottom="20dp"/>
 
         <TextView
             android:id="@+id/other_logins"
