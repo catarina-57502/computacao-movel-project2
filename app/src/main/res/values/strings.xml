@@ -2,7 +2,6 @@
     <string name="app_name">SHOTOP</string>
     <string name="splashString">Bem-Vindo!</string>
     <string name="mainTextWelcome">Aqui irá nascer o shotop</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="faz_o_teu_registo">Faz o teu registo!</string>
     <string name="password">Password</string>
@@ -24,4 +23,6 @@
     <string name="dont_have_account">Não tem uma conta?</string>
     <string name="register_link_text">Registar</string>
     <string name="search">Pesquisa…</string>
+    <string name="facebook_app_id">259837839464229</string>
+    <string name="fb_login_protocol_scheme">fb259837839464229</string>
 </resources>

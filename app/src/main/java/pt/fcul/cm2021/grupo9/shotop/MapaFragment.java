@@ -45,7 +45,7 @@ public class MapaFragment extends Fragment   {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_mapa, container, false);
 
-        BottomNavigationView b = getActivity().findViewById(R.id.bottom_navigatin_view);
+        BottomNavigationView b = getActivity().findViewById(R.id.bottom_navigation_view);
         b.setVisibility( View.VISIBLE);
 
 

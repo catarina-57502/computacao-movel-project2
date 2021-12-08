@@ -19,7 +19,7 @@
             android:fontFamily="monospace"
             android:text="@string/faz_o_teu_registo"
             android:textColor="#000000"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

@@ -24,7 +24,7 @@ public class RegisterFragment extends Fragment {
 
         View v =  inflater.inflate(R.layout.fragment_register, container, false);
         FragmentManager fragmentManager = getFragmentManager();
-        BottomNavigationView b = getActivity().findViewById(R.id.bottom_navigatin_view);
+        BottomNavigationView b = getActivity().findViewById(R.id.bottom_navigation_view);
         b.setVisibility( View.GONE);
 
         Button btn = (Button) v.findViewById(R.id.buttonRegistar);
