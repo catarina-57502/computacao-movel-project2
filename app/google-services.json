@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "518194514622",
+    "project_id": "shotop-sign-in",
+    "storage_bucket": "shotop-sign-in.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:518194514622:android:d9c735e3987fdea046acef",
+        "android_client_info": {
+          "package_name": "pt.fcul.cm2021.grupo9.shotop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "518194514622-d0fr6l56b92l7a9c3i05jg3htpfi59k3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkvk3QobixyziVdrjHNwCcz6F3Szya3eE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "518194514622-d0fr6l56b92l7a9c3i05jg3htpfi59k3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
