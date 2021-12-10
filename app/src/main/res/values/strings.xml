@@ -25,4 +25,8 @@
     <string name="search">Pesquisa…</string>
     <string name="facebook_app_id">259837839464229</string>
     <string name="fb_login_protocol_scheme">fb259837839464229</string>
+    <string name="mapa">Mapa</string>
+    <string name="adicionar">Adicionar</string>
+    <string name="comunidade">Comunidade</string>
+    <string name="log_out">Log Out</string>
 </resources>
