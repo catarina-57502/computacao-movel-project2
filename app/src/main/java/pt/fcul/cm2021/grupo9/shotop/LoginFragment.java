@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -31,6 +33,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
@@ -40,8 +44,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private static final int RC_SIGN_IN_GOOGLE = 1;
 
-    private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
+
+    private GoogleSignInClient mGoogleSignInClient;
     private CallbackManager mCallbackManager;
 
     @Override
@@ -76,10 +81,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setVisibility(View.GONE);
 
+        Button login = view.findViewById(R.id.btn_login);
+        login.setOnClickListener(this);
+
         Button loginFacebook = view.findViewById(R.id.facebook_login_button);
         loginFacebook.setOnClickListener(this);
 
-        SignInButton loginGoogle = view.findViewById(R.id.google_login_button);
+        Button loginGoogle = view.findViewById(R.id.google_login_button);
         loginGoogle.setOnClickListener(this);
 
         TextView register = view.findViewById(R.id.register_link_text);
@@ -96,6 +104,41 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
+    }
+
+    private void loginWithEmailAndPassword() {
+
+        EditText etEmail = requireView().findViewById(R.id.et_email_login);
+        EditText etPassword = requireView().findViewById(R.id.et_password_login);
+
+        String email = etEmail.getText().toString();
+        String password = etPassword.getText().toString();
+
+        if(!email.isEmpty() && !password.isEmpty()) {
+
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(requireActivity(), task -> {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user);
+                        } else {
+                            try {
+                                throw task.getException();
+                            } catch(FirebaseAuthInvalidUserException e) {
+                                Toast.makeText(requireActivity(), "User not registered!", Toast.LENGTH_SHORT).show();
+                            } catch(FirebaseAuthInvalidCredentialsException e) {
+                                Toast.makeText(requireActivity(), "Invalid credentials!", Toast.LENGTH_SHORT).show();
+                            } catch(Exception e) {
+                                Toast.makeText(requireActivity(), "Unexpected error!", Toast.LENGTH_SHORT).show();
+                            }
+                            // If sign in fails, display a message to the user.
+                            updateUI(null);
+                        }
+                    });
+        }
+        else
+            Toast.makeText(requireActivity(), "Some fields are empty!", Toast.LENGTH_SHORT).show();
     }
 
     private void loginWithFacebook() {
@@ -175,9 +218,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
-        if(v.getId() == R.id.facebook_login_button)
+        if(v.getId() == R.id.btn_login)
+            loginWithEmailAndPassword();
+        else if(v.getId() == R.id.facebook_login_button)
             loginWithFacebook();
-
         else if(v.getId() == R.id.google_login_button)
             loginWithGoogle();
         else

@@ -16,12 +16,17 @@ public class MainActivity extends AppCompatActivity  {
     public static final String TAG_LOGIN = "LOGIN";
     public static final String TAG_REGISTO = "REGISTO";
 
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
+
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
 
         onItemSelectedListener();
 
@@ -41,7 +46,7 @@ public class MainActivity extends AppCompatActivity  {
             int id = item.getItemId();
 
             if(id == R.id.logout) {
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                mAuth = FirebaseAuth.getInstance();
                 mAuth.signOut();
                 LoginManager.getInstance().logOut();
                 getSupportFragmentManager()

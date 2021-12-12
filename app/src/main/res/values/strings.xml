@@ -8,7 +8,6 @@
     <string name="confirmar_password">Confirmar Password</string>
     <string name="regista_te_no_shotop_de_modo_a_acederes_a_todas_as_funcionalidades">Regista-te no Shotop de modo a acederes a todas as funcionalidades</string>
     <string name="registar">Registar</string>
-    <string name="email">Email</string>
     <string name="nome">Nome</string>
     <string name="email_hint">johndoe@example.com</string>
     <string name="password_hint">*******</string>
@@ -29,4 +28,5 @@
     <string name="adicionar">Adicionar</string>
     <string name="comunidade">Comunidade</string>
     <string name="log_out">Log Out</string>
+    <string name="email">Email</string>
 </resources>
