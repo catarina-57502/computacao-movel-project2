@@ -55,6 +55,13 @@ public class MainActivity extends AppCompatActivity  {
                         .commit();
             }
 
+            if(id == R.id.community) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frameFragment, new RecreatePhotoFragment())
+                        .commit();
+            }
+
             return true;
         });
     }

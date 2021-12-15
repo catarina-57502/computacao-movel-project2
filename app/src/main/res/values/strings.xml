@@ -29,4 +29,6 @@
     <string name="comunidade">Comunidade</string>
     <string name="log_out">Log Out</string>
     <string name="email">Email</string>
+    <string name="tirar_foto">Tirar Foto</string>
+    <string name="recriar_foto">Recriar Foto</string>
 </resources>
