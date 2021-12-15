@@ -53,7 +53,16 @@
         </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCrYJ1In2bgVDaK9vI0sLBZOA234Sf1cCU"/>
+            android:value="AIzaSyAsSBLcKEQJvemQdocQ129gZcC0SM5MXyk"/>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="pt.fcul.cm2021.grupo9.shotop.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
     </application>
 
 </manifest>
