@@ -34,4 +34,6 @@
     <string name="capturar">CAPTURAR FOTO</string>
     <string name="tirar_foto">Tirar Foto</string>
     <string name="recriar_foto">Recriar Foto</string>
+    <string name="CameraOverlay">Camera Overlay</string>
+    <string name="escolherFoto">Escolher foto Galeria</string>
 </resources>

@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, 120);
         //checkLocationPermission();
         checkStoragePermission();
         checkStoragePermissionRead();
@@ -75,9 +75,10 @@ public class MainActivity extends AppCompatActivity  {
                 mAuth = FirebaseAuth.getInstance();
                 mAuth.signOut();
                 LoginManager.getInstance().logOut();
+
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.frameFragment, new LoginFragment())
+                        .replace(R.id.frameFragment,new LoginFragment())
                         .commit();
             }
 
@@ -92,6 +93,20 @@ public class MainActivity extends AppCompatActivity  {
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.frameFragment, new MetaDataFragment())
+                        .commit();
+            }
+
+            if(id == R.id.CameraOverlay) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frameFragment,new CameraFragment())
+                        .commit();
+            }
+
+            if(id == R.id.map) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frameFragment,new MapaFragment())
                         .commit();
             }
 
