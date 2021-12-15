@@ -29,6 +29,9 @@
     <string name="comunidade">Comunidade</string>
     <string name="log_out">Log Out</string>
     <string name="email">Email</string>
+    <string name="bemvindoFoto">Bem-Vindo! Adicionar Foto com IA!</string>
+    <string name="tireUmafoto">Capture uma nova fotografia!</string>
+    <string name="capturar">CAPTURAR FOTO</string>
     <string name="tirar_foto">Tirar Foto</string>
     <string name="recriar_foto">Recriar Foto</string>
 </resources>
