@@ -141,7 +141,7 @@ public class StartAddFragment extends Fragment  {
 
     }
 
-    String currentPhotoPath;
+    public static String currentPhotoPath;
 
     private File createImageFile() throws IOException {
         // Create an image file name
