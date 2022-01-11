@@ -54,7 +54,6 @@ public class VisionPhotoFragment extends Fragment {
         AdapterListCheckBox adapter = new AdapterListCheckBox(listVR,getContext());
         listv.setAdapter(adapter);
         vision(listv);
-        lv.setAdapter(adapter);
 
         final View view = v.findViewById(R.id.circle_three);
         view.setBackground(getResources().getDrawable(R.drawable.circle));
