@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import pt.fcul.cm2021.grupo9.shotop.R;
 
@@ -48,6 +49,8 @@ public class CheckPhotoFragment extends Fragment {
         btnCtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ProgressBar progressBar = v.findViewById(R.id.progress_loader);
+                progressBar.setVisibility(View.VISIBLE);
                 getParentFragmentManager()
                         .beginTransaction()
                         .replace(R.id.frameFragment, new VisionPhotoFragment(bitmap))
