@@ -27,16 +27,18 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
-public class MapaFragment extends Fragment   {
+public class MapaFragment extends Fragment implements OnLocationChangedListener  {
 
 
     MapView mMapView;
     private GoogleMap googleMap;
+    FusedLocation fl;
 
 
     @Override
@@ -45,6 +47,11 @@ public class MapaFragment extends Fragment   {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        fl = new FusedLocation(getContext());
+        FusedLocation.start(getContext());
+        FusedLocation.addListener(this);
+
         View rootView = inflater.inflate(R.layout.fragment_mapa, container, false);
 
         BottomNavigationView b = getActivity().findViewById(R.id.bottom_navigation_view);
@@ -148,5 +155,16 @@ public class MapaFragment extends Fragment   {
             }
 
         }
+    }
+
+    @Override
+    public void onLocationChanged(LocationResult locationResult) {
+        Location l = locationResult.getLastLocation();
+        LatLng atual = new LatLng( l.getLatitude(),  l.getLongitude());
+        googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(atual , 15.0f) );
+        googleMap.addMarker(new MarkerOptions()
+                .position(atual)
+                .title("EU"));
+
     }
 }

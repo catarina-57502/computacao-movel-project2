@@ -16,10 +16,12 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 
+import java.util.ArrayList;
+
 public class FusedLocation extends LocationCallback {
     Context context;
     private String TAG = "FUSEDLOCATION";
-    private long TIME_BETWEEN_UPDATES = 25 * 1000L;
+    private long TIME_BETWEEN_UPDATES = 20 * 1000L;
     private LocationRequest locationRequest;
     private FusedLocationProviderClient client;
 
@@ -35,12 +37,19 @@ public class FusedLocation extends LocationCallback {
         LocationServices.getSettingsClient(context).checkLocationSettings(locationSettingsRequest);
     }
 
-    public static OnLocationChangedListener listener = null;
+    public static ArrayList<OnLocationChangedListener> listener = new ArrayList<>();
     public static FusedLocation instance = null;
 
 
+    public static void addListener(OnLocationChangedListener listenerAdd) {
+        listener.add(listenerAdd);
+    }
+
+
     public static void notifyListeners(LocationResult locationResult) {
-        listener.onLocationChanged(locationResult);
+        for (OnLocationChangedListener i : listener){
+            i.onLocationChanged(locationResult);
+        }
     }
 
     public static void start(Context context) {
