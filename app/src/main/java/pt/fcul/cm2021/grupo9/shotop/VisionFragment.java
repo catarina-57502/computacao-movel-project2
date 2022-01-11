@@ -26,6 +26,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.services.vision.v1.Vision;
@@ -64,6 +70,8 @@ public class VisionFragment extends Fragment {
     String timeStamp;
     ArrayList<VisionResponse> listVR = new ArrayList<>();
     ListView lv;
+    MapView mMapView;
+    private GoogleMap googleMap;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -86,6 +94,30 @@ public class VisionFragment extends Fragment {
 
             }
         });
+
+
+        mMapView = (MapView) v.findViewById(R.id.mapView);
+        mMapView.onCreate(savedInstanceState);
+        mMapView.onResume(); // needed to get the map to display immediately
+
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @SuppressLint("MissingPermission")
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
+                LatLng atual;
+                atual = new LatLng( 38.756977088908094,  -9.155466230678432);
+                googleMap.animateCamera( CameraUpdateFactory.zoomTo( 10.0f ) );
+                googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(atual , 15.0f) );
+            }
+        });
+
         return v;
     }
 
