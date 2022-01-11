@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".processoAdicionar.VisionFragment">
+    tools:context=".processoAdicionar.StartAddFragment">
 
 
     <ScrollView
@@ -64,7 +64,7 @@
             <com.google.android.gms.maps.MapView
                 android:id="@+id/mapView"
                 android:layout_width="match_parent"
-                android:layout_height="400dp" />
+                android:layout_height="300dp" />
 
 
 
@@ -77,25 +77,6 @@
                 android:text="@string/capturar"
                 android:layout_height="wrap_content" />
 
-            <ImageView
-                android:id="@+id/photoview"
-                android:layout_width="200dp"
-                android:layout_height="200dp" />
-
-            <ListView
-                android:id="@+id/listView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintBottom_toTopOf="@+id/button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
 
         </LinearLayout>

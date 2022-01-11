@@ -23,7 +23,7 @@ import pt.fcul.cm2021.grupo9.shotop.login.LoginFragment;
 import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.MetaDataFragment;
 import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
-import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.VisionFragment;
+import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.StartAddFragment;
 
 
 public class MainActivity extends AppCompatActivity  {
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity  {
             if(id == R.id.add) {
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.frameFragment, new VisionFragment())
+                        .replace(R.id.frameFragment, new StartAddFragment())
                         .commit();
             }
 
