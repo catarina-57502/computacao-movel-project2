@@ -39,20 +39,26 @@ import pt.fcul.cm2021.grupo9.shotop.adapters.AdapterListCheckBox;
 public class VisionPhotoFragment extends Fragment {
 
     ArrayList<VisionResponse> listVR = new ArrayList<>();
-    ListView lv;
+    ListView listv;
+    Bitmap bitmap;
+
+    VisionPhotoFragment(Bitmap bm){
+        this.bitmap = bm;
+    }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_vision_photo, container, false);
-        lv = v.findViewById(R.id.listView);
+        listv = v.findViewById(R.id.listView);
         AdapterListCheckBox adapter = new AdapterListCheckBox(listVR,getContext());
-        lv.setAdapter(adapter);
+        listv.setAdapter(adapter);
+        vision(listv);
         return v;
     }
 
 
-    public void vision(){
+    public void vision(ListView lv){
         Thread t = new Thread(new Runnable() {
             public void run(){
                 try {
@@ -72,7 +78,7 @@ public class VisionPhotoFragment extends Fragment {
 
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    //bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
                     InputStream inputStream = new ByteArrayInputStream(baos.toByteArray());
 
                     byte[] photoData = IOUtils.toByteArray(inputStream);
@@ -109,7 +115,6 @@ public class VisionPhotoFragment extends Fragment {
         t.start();
         try {
             t.join();
-            lv = getView().findViewById(R.id.listView);
             AdapterListCheckBox adapter = new AdapterListCheckBox(listVR,getContext());
             lv.setAdapter(adapter);
         } catch (InterruptedException e) {

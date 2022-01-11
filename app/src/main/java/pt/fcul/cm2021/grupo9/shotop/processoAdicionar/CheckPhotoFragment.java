@@ -43,6 +43,18 @@ public class CheckPhotoFragment extends Fragment {
             }
         });
 
+        Button btnCtn = (Button) v.findViewById(R.id.continuarBtn);
+
+        btnCtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getParentFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frameFragment, new VisionPhotoFragment(bitmap))
+                        .commit();
+            }
+        });
+
 
         return v;
     }
