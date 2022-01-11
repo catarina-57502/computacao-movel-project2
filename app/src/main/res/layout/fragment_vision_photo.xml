@@ -14,6 +14,17 @@
 
         <include layout="@layout/stepper_layout" />
 
+        <TextView
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="Confirme as característivas detetadas"
+            android:layout_marginBottom="20dp" />
+
         <ListView
             android:id="@+id/listView"
             android:layout_width="wrap_content"

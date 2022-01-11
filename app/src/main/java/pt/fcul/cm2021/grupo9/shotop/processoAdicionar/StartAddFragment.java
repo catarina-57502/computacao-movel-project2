@@ -17,7 +17,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -52,10 +54,20 @@ public class StartAddFragment extends Fragment {
         button = (Button) v.findViewById(R.id.photo);
         imageView = (ImageView) v.findViewById(R.id.photoview);
 
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dispatchTakePictureIntent();
+
+                EditText etNomeFoto= v.findViewById(R.id.et_namePhoto);
+
+                String nomeFoto = etNomeFoto.getText().toString();
+
+                if(nomeFoto.isEmpty()){
+                    Toast.makeText(requireActivity(), "Nome vazio!", Toast.LENGTH_SHORT).show();
+                }else {
+                    dispatchTakePictureIntent();
+                }
             }
         });
 
@@ -96,22 +108,22 @@ public class StartAddFragment extends Fragment {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
 
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-                System.out.println("ERRO");
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                photoURI = FileProvider.getUriForFile(getContext(),
-                        "pt.fcul.cm2021.grupo9.shotop.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
+        // Create the File where the photo should go
+        File photoFile = null;
+        try {
+            photoFile = createImageFile();
+        } catch (IOException ex) {
+            // Error occurred while creating the File
+            System.out.println("ERRO");
+        }
+        // Continue only if the File was successfully created
+        if (photoFile != null) {
+            photoURI = FileProvider.getUriForFile(getContext(),
+                    "pt.fcul.cm2021.grupo9.shotop.fileprovider",
+                    photoFile);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+        }
 
     }
 
