@@ -57,6 +57,8 @@ public class StartAddFragment extends Fragment {
             }
         });
 
+        final View view = v.findViewById(R.id.circle_one);
+        view.setBackground(getResources().getDrawable(R.drawable.circle));
 
         mMapView = (MapView) v.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);

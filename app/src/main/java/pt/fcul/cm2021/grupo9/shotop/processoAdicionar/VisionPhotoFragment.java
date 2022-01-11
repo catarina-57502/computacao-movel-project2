@@ -48,6 +48,10 @@ public class VisionPhotoFragment extends Fragment {
         lv = v.findViewById(R.id.listView);
         AdapterListCheckBox adapter = new AdapterListCheckBox(listVR,getContext());
         lv.setAdapter(adapter);
+
+        final View view = v.findViewById(R.id.circle_three);
+        view.setBackground(getResources().getDrawable(R.drawable.circle));
+
         return v;
     }
 

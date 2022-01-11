@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:visibility="visible"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <View
+        android:id="@+id/circle_one"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@drawable/hollow_circle" />
+
+    <View
+        android:id="@+id/line_one"
+        android:layout_width="76dp"
+        android:layout_height="15dp"
+        android:layout_toEndOf="@+id/circle_one"
+        android:background="@drawable/line" />
+
+    <View
+        android:id="@+id/circle_two"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_toEndOf="@+id/line_one"
+        android:background="@drawable/hollow_circle" />
+
+    <View
+        android:id="@+id/line_two"
+        android:layout_width="76dp"
+        android:layout_height="15dp"
+        android:layout_toEndOf="@+id/circle_two"
+        android:background="@drawable/line" />
+
+    <View
+        android:id="@+id/circle_three"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_toEndOf="@+id/line_two"
+        android:background="@drawable/hollow_circle" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/circle_one"
+        android:text="1"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/circle_two"
+        android:layout_toEndOf="@id/line_one"
+        android:text="2"
+        android:textSize="15dp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/circle_three"
+        android:layout_toEndOf="@id/line_two"
+        android:text="3"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        />
+
+</RelativeLayout>
