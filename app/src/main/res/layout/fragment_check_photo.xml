@@ -12,7 +12,10 @@
         android:layout_margin="20dp"
         android:orientation="vertical">
 
+        <include layout="@layout/stepper_layout" />
+
         <ImageView
+            android:layout_marginTop="20dp"
             android:id="@+id/photoview"
             android:layout_marginBottom="100dp"
             android:layout_width="350dp"
