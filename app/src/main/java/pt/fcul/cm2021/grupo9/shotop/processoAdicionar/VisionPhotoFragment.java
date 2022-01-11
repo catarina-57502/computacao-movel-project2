@@ -119,7 +119,6 @@ public class VisionPhotoFragment extends Fragment {
         t.start();
         try {
             t.join();
-            lv = getView().findViewById(R.id.listView);
             AdapterListCheckBox adapter = new AdapterListCheckBox(listVR,getContext());
             lv.setAdapter(adapter);
         } catch (InterruptedException e) {
