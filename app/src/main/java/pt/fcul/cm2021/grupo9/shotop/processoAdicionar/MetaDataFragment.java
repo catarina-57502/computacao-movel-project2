@@ -48,15 +48,43 @@ public class MetaDataFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(Intent.ACTION_PICK,
+                if(StartAddFragment.currentPhotoPath != null){
+                    String selectedImagePath = StartAddFragment.currentPhotoPath;;
+                    System.out.println("PATH = " + selectedImagePath);
+                    try {
+                        File jpegFile = new File(selectedImagePath);
+                        Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
+                        System.out.println(metadata.getDirectoryCount());
+                        String s = "";
+                        for (Directory directory : metadata.getDirectories()) {
+                            for (Tag tag : directory.getTags()) {
+                                //System.out.println(tag);
+                                ar.add(tag.toString());
+                                s = s + tag + "\n";
+                            }
+                        }
+                        System.out.println(s);
+                        lv.invalidateViews();
+                        b.setVisibility(View.GONE);
+
+                    } catch (ImageProcessingException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                /*
+                 Intent intent = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(Intent.createChooser(intent, "select image"),
                         PICK_IMAGE);
+                 */
 
             }
         });
 
-         lv = v.findViewById(R.id.listmeta);
+        lv = v.findViewById(R.id.listmeta);
         AdapterList adapter = new AdapterList(ar,getContext());
         lv.setAdapter(adapter);
 
@@ -65,7 +93,8 @@ public class MetaDataFragment extends Fragment {
     }
 
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+/*
+public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode ==  PICK_IMAGE) {
             Uri selectedImageUri = data.getData();
             System.out.println("Oiiuii");
@@ -99,7 +128,8 @@ public class MetaDataFragment extends Fragment {
 
         }
     }
-
+ */
+    /*
     public String getRealPathFromURIForGallery(Uri uri) {
         if (uri == null) {
             return null;
@@ -117,5 +147,7 @@ public class MetaDataFragment extends Fragment {
         cursor.close();
         return uri.getPath();
     }
+     */
+
 
 }
