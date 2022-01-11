@@ -54,6 +54,11 @@ public class VisionPhotoFragment extends Fragment {
         AdapterListCheckBox adapter = new AdapterListCheckBox(listVR,getContext());
         listv.setAdapter(adapter);
         vision(listv);
+        lv.setAdapter(adapter);
+
+        final View view = v.findViewById(R.id.circle_three);
+        view.setBackground(getResources().getDrawable(R.drawable.circle));
+
         return v;
     }
 
@@ -115,6 +120,7 @@ public class VisionPhotoFragment extends Fragment {
         t.start();
         try {
             t.join();
+            lv = getView().findViewById(R.id.listView);
             AdapterListCheckBox adapter = new AdapterListCheckBox(listVR,getContext());
             lv.setAdapter(adapter);
         } catch (InterruptedException e) {

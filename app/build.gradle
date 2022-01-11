@@ -74,7 +74,6 @@ dependencies {
     implementation 'com.google.code.findbugs:jsr305:2.0.1'
 
 
-
     implementation 'commons-io:commons-io:2.5'
 
     implementation 'com.drewnoakes:metadata-extractor:2.16.0'

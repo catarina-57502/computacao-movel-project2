@@ -55,6 +55,8 @@ public class CheckPhotoFragment extends Fragment {
             }
         });
 
+        final View view = v.findViewById(R.id.circle_two);
+        view.setBackground(getResources().getDrawable(R.drawable.circle));
 
         return v;
     }
