@@ -30,6 +30,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.firestore.GeoPoint;
 
 
 import java.io.File;
@@ -38,6 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import pt.fcul.cm2021.grupo9.shotop.R;
+import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
 import pt.fcul.cm2021.grupo9.shotop.listeners.OnLocationChangedListener;
 import pt.fcul.cm2021.grupo9.shotop.location.FusedLocation;
 import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
@@ -53,6 +55,7 @@ public class StartAddFragment extends Fragment  {
     Uri photoURI;
     MapView mMapView;
     private GoogleMap googleMap;
+    String nomeFoto;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,7 +70,7 @@ public class StartAddFragment extends Fragment  {
 
                 EditText etNomeFoto= v.findViewById(R.id.et_namePhoto);
 
-                String nomeFoto = etNomeFoto.getText().toString();
+                nomeFoto = etNomeFoto.getText().toString();
 
                 if(nomeFoto.isEmpty()){
                     Toast.makeText(requireActivity(), "Nome vazio!", Toast.LENGTH_SHORT).show();
@@ -95,6 +98,9 @@ public class StartAddFragment extends Fragment  {
                 googleMap = mMap;
                 LatLng atual;
                 atual = MapaFragment.lastLocation;
+                if(atual == null){
+                    atual = new LatLng(38.756977088908094,  -9.155466230678432);
+                }
                 googleMap.animateCamera( CameraUpdateFactory.zoomTo( 10.0f ) );
                 googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(atual , 15.0f) );
                 googleMap.addMarker(new MarkerOptions()
@@ -113,7 +119,6 @@ public class StartAddFragment extends Fragment  {
     static final int REQUEST_TAKE_PHOTO = 1;
 
     private void dispatchTakePictureIntent() {
-        System.out.println("oi");
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
 
@@ -156,11 +161,11 @@ public class StartAddFragment extends Fragment  {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        Spot spot = new Spot(nomeFoto,new GeoPoint(MapaFragment.lastLocation.latitude,MapaFragment.lastLocation.longitude));
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             getParentFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.frameFragment, new CheckPhotoFragment(bitmap,currentPhotoPath))
+                    .replace(R.id.frameFragment, new CheckPhotoFragment(bitmap,currentPhotoPath,spot))
                     .commit();
         }
 

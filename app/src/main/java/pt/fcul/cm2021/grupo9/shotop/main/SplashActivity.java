@@ -7,16 +7,18 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import pt.fcul.cm2021.grupo9.shotop.R;
+import pt.fcul.cm2021.grupo9.shotop.location.FusedLocation;
 
 public class SplashActivity extends AppCompatActivity {
 
     /** Duração Splash Screen **/
-    private final int SPLASH_TIME = 1500;
+    private final int SPLASH_TIME = 3000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
+        FusedLocation.start(this);
         setContentView(R.layout.activity_splash);
         new Handler().postDelayed(new Runnable(){
             @Override

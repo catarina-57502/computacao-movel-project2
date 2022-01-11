@@ -34,6 +34,7 @@ import org.json.JSONObject;
 
 import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.adapters.AdapterListCheckBox;
+import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
 
 
 public class VisionPhotoFragment extends Fragment {
@@ -41,9 +42,11 @@ public class VisionPhotoFragment extends Fragment {
     ArrayList<VisionResponse> listVR = new ArrayList<>();
     ListView listv;
     Bitmap bitmap;
+    Spot spot;
 
-    VisionPhotoFragment(Bitmap bm){
+    VisionPhotoFragment(Bitmap bm, Spot spot){
         this.bitmap = bm;
+        this.spot = spot;
     }
 
 
@@ -126,5 +129,16 @@ public class VisionPhotoFragment extends Fragment {
         }
 
 
+    }
+
+    public void submit(){
+        /* // confirmar o que esta selecionado e meter no spot
+        ArrayList<String> listaCarac = new ArrayList<>();
+            for(VisionResponse vr: listVR){
+                listaCarac.add(vr.description);
+            }
+
+            spot.setCaracteristicas(listaCarac);
+         */
     }
 }

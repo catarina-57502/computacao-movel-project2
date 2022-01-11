@@ -23,7 +23,8 @@ import pt.fcul.cm2021.grupo9.shotop.listeners.OnLocationChangedListener;
 public class FusedLocation extends LocationCallback {
     Context context;
     private String TAG = "FUSEDLOCATION";
-    private long TIME_BETWEEN_UPDATES = 20 * 1000L;
+    //TODO confirmar isto
+    private long TIME_BETWEEN_UPDATES = 1 * 500L;
     private LocationRequest locationRequest;
     private FusedLocationProviderClient client;
 

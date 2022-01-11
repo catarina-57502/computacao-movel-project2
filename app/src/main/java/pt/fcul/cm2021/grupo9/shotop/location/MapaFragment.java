@@ -49,7 +49,6 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         fl = new FusedLocation(getContext());
-        FusedLocation.start(getContext());
         FusedLocation.addListener(this);
 
         View rootView = inflater.inflate(R.layout.fragment_mapa, container, false);
@@ -74,7 +73,12 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
                 LatLng atual;
-                atual = new LatLng( 38.756977088908094,  -9.155466230678432);
+                if(lastLocation == null){
+                    atual = new LatLng( 38.756977088908094,  -9.155466230678432);
+                }else{
+                    atual = lastLocation;
+                }
+
                 googleMap.animateCamera( CameraUpdateFactory.zoomTo( 10.0f ) );
                 googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(atual , 15.0f) );
             }

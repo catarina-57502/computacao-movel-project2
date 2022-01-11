@@ -13,17 +13,22 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import java.io.ByteArrayOutputStream;
+
 import pt.fcul.cm2021.grupo9.shotop.R;
+import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
 
 
 public class CheckPhotoFragment extends Fragment {
 
     Bitmap bitmap;
     String currentPhotoPath;
+    Spot spot;
 
-    CheckPhotoFragment(Bitmap bm, String currentPhotoPath){
+    CheckPhotoFragment(Bitmap bm, String currentPhotoPath, Spot spot){
         this.bitmap = bm;
         this.currentPhotoPath = currentPhotoPath;
+        this.spot = spot;
     }
 
     @Override
@@ -53,7 +58,7 @@ public class CheckPhotoFragment extends Fragment {
                 progressBar.setVisibility(View.VISIBLE);
                 getParentFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.frameFragment, new VisionPhotoFragment(bitmap))
+                        .replace(R.id.frameFragment, new VisionPhotoFragment(bitmap,spot))
                         .commit();
             }
         });
@@ -79,6 +84,16 @@ public class CheckPhotoFragment extends Fragment {
         bmOptions.inPurgeable = true;
 
         bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+        System.out.println(bitmap);
+
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        spot.setImagem(byteArray);
+
+
+
         imgV.setImageBitmap(bitmap);
     }
 }
