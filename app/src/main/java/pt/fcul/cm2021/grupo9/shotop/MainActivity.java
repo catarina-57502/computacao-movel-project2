@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
 
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, 120);
-        //checkLocationPermission();
+        checkLocationPermission();
         checkStoragePermission();
         checkStoragePermissionRead();
 
