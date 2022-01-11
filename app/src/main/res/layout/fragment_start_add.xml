@@ -75,6 +75,7 @@
                 android:id="@+id/photo"
                 android:layout_width="match_parent"
                 android:layout_marginEnd="60dp"
+                android:layout_marginBottom="205dp"
                 android:layout_marginStart="60dp"
                 android:text="@string/capturar"
                 android:layout_height="wrap_content" />
