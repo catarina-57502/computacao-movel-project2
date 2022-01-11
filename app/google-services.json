@@ -1,33 +1,34 @@
 {
   "project_info": {
-    "project_number": "518194514622",
-    "project_id": "shotop-sign-in",
-    "storage_bucket": "shotop-sign-in.appspot.com"
+    "project_number": "390665430281",
+    "firebase_url": "https://cmfire-2cf6b-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "cmfire-2cf6b",
+    "storage_bucket": "cmfire-2cf6b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:518194514622:android:d9c735e3987fdea046acef",
+        "mobilesdk_app_id": "1:390665430281:android:98133617ff1ca84595dfd8",
         "android_client_info": {
           "package_name": "pt.fcul.cm2021.grupo9.shotop"
         }
       },
       "oauth_client": [
         {
-          "client_id": "518194514622-d0fr6l56b92l7a9c3i05jg3htpfi59k3.apps.googleusercontent.com",
+          "client_id": "390665430281-m37rtup5v3umil42685u7c7fd3obk852.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBkvk3QobixyziVdrjHNwCcz6F3Szya3eE"
+          "current_key": "AIzaSyBM6A7V10bqTQhzEd3nC_6A1-6HJJH76fI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "518194514622-d0fr6l56b92l7a9c3i05jg3htpfi59k3.apps.googleusercontent.com",
+              "client_id": "390665430281-m37rtup5v3umil42685u7c7fd3obk852.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

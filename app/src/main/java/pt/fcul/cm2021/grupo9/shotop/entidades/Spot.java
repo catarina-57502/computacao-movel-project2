@@ -1,15 +1,19 @@
 package pt.fcul.cm2021.grupo9.shotop.entidades;
 
+import android.annotation.SuppressLint;
+
 import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 
 public class Spot {
 
     String nome;
     GeoPoint loc;
-    byte[] imagem;
-    ArrayList<String> caracteristicas;
+    String imagem;
+    List<String> caracteristicas;
     String iso;
 
     public Spot(String nome, GeoPoint loc){
@@ -17,6 +21,9 @@ public class Spot {
         this.loc = loc;
     }
 
+    public String getImagem() {
+        return imagem;
+    }
 
     public String getNome() {
         return nome;
@@ -34,15 +41,13 @@ public class Spot {
         this.loc = loc;
     }
 
-    public byte[] getImagem() {
-        return imagem;
-    }
-
+    @SuppressLint("NewApi")
     public void setImagem(byte[] imagem) {
-        this.imagem = imagem;
+        String s = Base64.getEncoder().encodeToString(imagem);
+        this.imagem = s;
     }
 
-    public ArrayList<String> getCaracteristicas() {
+    public List<String> getCaracteristicas() {
         return caracteristicas;
     }
 
@@ -65,4 +70,6 @@ public class Spot {
                 ", loc=" + loc +
                 '}';
     }
+
+
 }

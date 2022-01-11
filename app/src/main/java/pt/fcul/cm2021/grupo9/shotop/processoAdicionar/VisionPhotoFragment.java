@@ -1,13 +1,18 @@
 package pt.fcul.cm2021.grupo9.shotop.processoAdicionar;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.services.vision.v1.Vision;
@@ -18,6 +23,7 @@ import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.FaceAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
+import com.google.firebase.firestore.DocumentReference;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -26,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import android.graphics.Bitmap;
+import android.widget.Button;
 import android.widget.ListView;
 
 import org.apache.commons.io.IOUtils;
@@ -35,6 +42,7 @@ import org.json.JSONObject;
 import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.adapters.AdapterListCheckBox;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
+import pt.fcul.cm2021.grupo9.shotop.main.MainActivity;
 
 
 public class VisionPhotoFragment extends Fragment {
@@ -57,6 +65,14 @@ public class VisionPhotoFragment extends Fragment {
         AdapterListCheckBox adapter = new AdapterListCheckBox(listVR,getContext());
         listv.setAdapter(adapter);
         vision(listv);
+
+        Button b = v.findViewById(R.id.submit);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                submit();
+            }
+        });
 
         final View view = v.findViewById(R.id.circle_three);
         view.setBackground(getResources().getDrawable(R.drawable.circle));
@@ -122,6 +138,11 @@ public class VisionPhotoFragment extends Fragment {
         t.start();
         try {
             t.join();
+            ArrayList<String> listaCarac = new ArrayList<>();
+            for(VisionResponse vr: listVR){
+                listaCarac.add(vr.description);
+            }
+            spot.setCaracteristicas(listaCarac);
             AdapterListCheckBox adapter = new AdapterListCheckBox(listVR,getContext());
             lv.setAdapter(adapter);
         } catch (InterruptedException e) {
@@ -132,13 +153,19 @@ public class VisionPhotoFragment extends Fragment {
     }
 
     public void submit(){
-        /* // confirmar o que esta selecionado e meter no spot
-        ArrayList<String> listaCarac = new ArrayList<>();
-            for(VisionResponse vr: listVR){
-                listaCarac.add(vr.description);
-            }
-
-            spot.setCaracteristicas(listaCarac);
-         */
+        MainActivity.db.collection("Spot")
+                .add(spot)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("SHOTOP", "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("SHOTOP", "Error adding document", e);
+                    }
+                });
     }
 }

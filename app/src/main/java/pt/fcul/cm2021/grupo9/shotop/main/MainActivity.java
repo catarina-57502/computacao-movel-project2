@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.facebook.login.LoginManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 import pt.fcul.cm2021.grupo9.shotop.camera.CameraFragment;
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity  {
     public static final String TAG_REGISTO = "REGISTO";
 
     private FirebaseAuth mAuth;
+    public static final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
 
     @Override
