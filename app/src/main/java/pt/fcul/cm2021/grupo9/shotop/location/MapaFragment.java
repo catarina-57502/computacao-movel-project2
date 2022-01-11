@@ -38,6 +38,8 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
     private GoogleMap googleMap;
     FusedLocation fl;
 
+    static public LatLng lastLocation;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -159,6 +161,7 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
     public void onLocationChanged(LocationResult locationResult) {
         Location l = locationResult.getLastLocation();
         LatLng atual = new LatLng( l.getLatitude(),  l.getLongitude());
+        lastLocation = atual;
         googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(atual , 15.0f) );
         googleMap.addMarker(new MarkerOptions()
                 .position(atual)

@@ -3,6 +3,7 @@ package pt.fcul.cm2021.grupo9.shotop.processoAdicionar;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -21,12 +22,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
 import java.io.File;
@@ -35,9 +38,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import pt.fcul.cm2021.grupo9.shotop.R;
+import pt.fcul.cm2021.grupo9.shotop.listeners.OnLocationChangedListener;
+import pt.fcul.cm2021.grupo9.shotop.location.FusedLocation;
+import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
 
 
-public class StartAddFragment extends Fragment {
+public class StartAddFragment extends Fragment  {
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
 
     Button button;
@@ -88,9 +94,12 @@ public class StartAddFragment extends Fragment {
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
                 LatLng atual;
-                atual = new LatLng( 38.756977088908094,  -9.155466230678432);
+                atual = MapaFragment.lastLocation;
                 googleMap.animateCamera( CameraUpdateFactory.zoomTo( 10.0f ) );
                 googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(atual , 15.0f) );
+                googleMap.addMarker(new MarkerOptions()
+                        .position(atual)
+                        .title("ATUAL"));
             }
         });
 
@@ -157,5 +166,4 @@ public class StartAddFragment extends Fragment {
 
 
     }
-
 }
