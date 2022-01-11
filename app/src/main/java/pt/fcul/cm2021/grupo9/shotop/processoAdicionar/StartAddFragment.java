@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
@@ -57,8 +59,6 @@ public class StartAddFragment extends Fragment {
             }
         });
 
-        final View view = v.findViewById(R.id.circle_one);
-        view.setBackground(getResources().getDrawable(R.drawable.circle));
 
         mMapView = (MapView) v.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
@@ -82,8 +82,12 @@ public class StartAddFragment extends Fragment {
             }
         });
 
+        final View view = v.findViewById(R.id.circle_one);
+        view.setBackground(getResources().getDrawable(R.drawable.circle));
+
         return v;
     }
+
 
     static final int REQUEST_TAKE_PHOTO = 1;
 
