@@ -1,4 +1,4 @@
-package pt.fcul.cm2021.grupo9.shotop;
+package pt.fcul.cm2021.grupo9.shotop.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import pt.fcul.cm2021.grupo9.shotop.R;
 
 public class AdapterList extends BaseAdapter {
     private ArrayList<String> listVision;

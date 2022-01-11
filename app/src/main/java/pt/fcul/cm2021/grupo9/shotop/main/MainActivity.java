@@ -1,12 +1,10 @@
-package pt.fcul.cm2021.grupo9.shotop;
+package pt.fcul.cm2021.grupo9.shotop.main;
 
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.Image;
-import android.os.Build;
 import android.os.Bundle;
 
 
@@ -18,12 +16,14 @@ import androidx.fragment.app.Fragment;
 import com.facebook.login.LoginManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
 
 
-import java.io.IOException;
-
+import pt.fcul.cm2021.grupo9.shotop.camera.CameraFragment;
+import pt.fcul.cm2021.grupo9.shotop.login.LoginFragment;
+import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.MetaDataFragment;
+import pt.fcul.cm2021.grupo9.shotop.R;
+import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
+import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.VisionFragment;
 
 
 public class MainActivity extends AppCompatActivity  {

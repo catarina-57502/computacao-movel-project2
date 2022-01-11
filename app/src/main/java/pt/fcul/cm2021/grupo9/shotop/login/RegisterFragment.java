@@ -1,4 +1,4 @@
-package pt.fcul.cm2021.grupo9.shotop;
+package pt.fcul.cm2021.grupo9.shotop.login;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +16,9 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+
+import pt.fcul.cm2021.grupo9.shotop.R;
+import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
 
 public class RegisterFragment extends Fragment {
 

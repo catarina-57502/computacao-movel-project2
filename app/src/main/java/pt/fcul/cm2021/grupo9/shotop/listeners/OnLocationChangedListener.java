@@ -1,4 +1,4 @@
-package pt.fcul.cm2021.grupo9.shotop;
+package pt.fcul.cm2021.grupo9.shotop.listeners;
 
 import com.google.android.gms.location.LocationResult;
 

@@ -1,4 +1,4 @@
-package pt.fcul.cm2021.grupo9.shotop;
+package pt.fcul.cm2021.grupo9.shotop.camera;
 
 import android.content.Context;
 import android.hardware.Camera;

@@ -1,4 +1,4 @@
-package pt.fcul.cm2021.grupo9.shotop;
+package pt.fcul.cm2021.grupo9.shotop.location;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -17,6 +17,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 
 import java.util.ArrayList;
+
+import pt.fcul.cm2021.grupo9.shotop.listeners.OnLocationChangedListener;
 
 public class FusedLocation extends LocationCallback {
     Context context;
