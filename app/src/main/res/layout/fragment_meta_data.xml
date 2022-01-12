@@ -5,17 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".processoAdicionar.MetaDataFragment">
 
-   <Button
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:text="@string/escolherFoto"
-       android:layout_gravity="center"
-       android:id="@+id/but"
-       />
-
-   <ListView
-       android:id="@+id/listmeta"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"/>
+  <ImageView
+      android:id="@+id/imgId"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+     />
 
 </FrameLayout>

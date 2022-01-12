@@ -1,5 +1,6 @@
 package pt.fcul.cm2021.grupo9.shotop.entidades;
 
+import android.accessibilityservice.GestureDescription;
 import android.annotation.SuppressLint;
 
 import com.google.firebase.firestore.GeoPoint;
@@ -14,16 +15,219 @@ public class Spot {
     GeoPoint loc;
     String imagem;
     List<String> caracteristicas;
-    String iso;
+
+    String imageHeight;
+    String imageWidth;
+    String model;
+    String dateTime;
+    String orientation;
+    String fNumber;
+    String exposureTime;
+    String focalLength;
+    String flash;
+    String iSOSpeedRatings;
+    String whiteBalanceMode;
+    String apertureValue;
+    String shutterSpeedValue;
+    String detectedFileTypeName;
+    String fileSize;
+    String brightnessValue;
+    String exposureBiasValue;
+    String maxApertureValue;
+    String digitalZoomRatio;
+    String contrast;
+    String saturation;
+    String sharpness;
+
+
+    public String getImagem() {
+        return imagem;
+    }
+
+    public String getExposureBiasValue() {
+        return exposureBiasValue;
+    }
+
+    public void setExposureBiasValue(String exposureBiasValue) {
+        this.exposureBiasValue = exposureBiasValue;
+    }
+
+    public String getDigitalZoomRatio() {
+        return digitalZoomRatio;
+    }
+
+    public void setDigitalZoomRatio(String digitalZoomRatio) {
+        this.digitalZoomRatio = digitalZoomRatio;
+    }
+
+    public String getSharpness() {
+        return sharpness;
+    }
+
+    public void setSharpness(String sharpness) {
+        this.sharpness = sharpness;
+    }
+
+
+
+    public String getImageHeight() {
+        return imageHeight;
+    }
+
+    public void setImageHeight(String imageHeight) {
+        this.imageHeight = imageHeight;
+    }
+
+    public String getImageWidth() {
+        return imageWidth;
+    }
+
+    public void setImageWidth(String imageWidth) {
+        this.imageWidth = imageWidth;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public String getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(String orientation) {
+        this.orientation = orientation;
+    }
+
+    public String getfNumber() {
+        return fNumber;
+    }
+
+    public void setfNumber(String fNumber) {
+        this.fNumber = fNumber;
+    }
+
+    public String getExposureTime() {
+        return exposureTime;
+    }
+
+    public void setExposureTime(String exposureTime) {
+        this.exposureTime = exposureTime;
+    }
+
+    public String getFocalLength() {
+        return focalLength;
+    }
+
+    public void setFocalLength(String focalLength) {
+        this.focalLength = focalLength;
+    }
+
+    public String getFlash() {
+        return flash;
+    }
+
+    public void setFlash(String flash) {
+        this.flash = flash;
+    }
+
+    public String getiSOSpeedRatings() {
+        return iSOSpeedRatings;
+    }
+
+    public void setiSOSpeedRatings(String iSOSpeedRatings) {
+        this.iSOSpeedRatings = iSOSpeedRatings;
+    }
+
+    public String getWhiteBalanceMode() {
+        return whiteBalanceMode;
+    }
+
+    public void setWhiteBalanceMode(String whiteBalanceMode) {
+        this.whiteBalanceMode = whiteBalanceMode;
+    }
+
+    public String getApertureValue() {
+        return apertureValue;
+    }
+
+    public void setApertureValue(String apertureValue) {
+        this.apertureValue = apertureValue;
+    }
+
+    public String getShutterSpeedValue() {
+        return shutterSpeedValue;
+    }
+
+    public void setShutterSpeedValue(String shutterSpeedValue) {
+        this.shutterSpeedValue = shutterSpeedValue;
+    }
+
+    public String getDetectedFileTypeName() {
+        return detectedFileTypeName;
+    }
+
+    public void setDetectedFileTypeName(String detectedFileTypeName) {
+        this.detectedFileTypeName = detectedFileTypeName;
+    }
+
+    public String getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(String fileSize) {
+        this.fileSize = fileSize;
+    }
+
+    public String getBrightnessValue() {
+        return brightnessValue;
+    }
+
+    public void setBrightnessValue(String brightnessValue) {
+        this.brightnessValue = brightnessValue;
+    }
+
+    public String getMaxApertureValue() {
+        return maxApertureValue;
+    }
+
+    public void setMaxApertureValue(String maxApertureValue) {
+        this.maxApertureValue = maxApertureValue;
+    }
+
+    public String getContrast() {
+        return contrast;
+    }
+
+    public void setContrast(String contrast) {
+        this.contrast = contrast;
+    }
+
+    public String getSaturation() {
+        return saturation;
+    }
+
+    public void setSaturation(String saturation) {
+        this.saturation = saturation;
+    }
 
     public Spot(String nome, GeoPoint loc){
         this.nome = nome;
         this.loc = loc;
     }
 
-    public String getImagem() {
-        return imagem;
-    }
+
 
     public String getNome() {
         return nome;
@@ -45,6 +249,8 @@ public class Spot {
     public void setImagem(byte[] imagem) {
         String s = Base64.getEncoder().encodeToString(imagem);
         this.imagem = s;
+
+
     }
 
     public List<String> getCaracteristicas() {
@@ -55,13 +261,6 @@ public class Spot {
         this.caracteristicas = caracteristicas;
     }
 
-    public String getIso() {
-        return iso;
-    }
-
-    public void setIso(String iso) {
-        this.iso = iso;
-    }
 
     @Override
     public String toString() {

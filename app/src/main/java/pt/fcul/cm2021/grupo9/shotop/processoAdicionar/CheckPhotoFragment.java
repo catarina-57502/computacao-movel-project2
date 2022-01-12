@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.Directory;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.Tag;
+
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 
 import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
@@ -36,6 +45,7 @@ public class CheckPhotoFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_check_photo, container, false);
         ImageView imgView = v.findViewById(R.id.photoview);
         setPic(imgView);
+        getDados();
 
         Button btn = (Button) v.findViewById(R.id.repetirBtn);
 
@@ -69,6 +79,99 @@ public class CheckPhotoFragment extends Fragment {
         return v;
     }
 
+    public void getDados(){
+        if(StartAddFragment.currentPhotoPath != null){
+            String selectedImagePath = StartAddFragment.currentPhotoPath;;
+            System.out.println("PATH = " + selectedImagePath);
+            try {
+                File jpegFile = new File(selectedImagePath);
+                Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
+                for (Directory directory : metadata.getDirectories()) {
+                    for (Tag tag : directory.getTags()) {
+                        checkCategoria(tag.getTagName(),tag.getDescription());
+                    }
+                }
+            } catch (ImageProcessingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void checkCategoria(String ctg, String value){
+        switch (ctg){
+            case "Image Height":
+                spot.setImageHeight(value);
+                break;
+            case "Image Width":
+                spot.setImageWidth(value);
+                break;
+            case "Model":
+                spot.setModel(value);
+                break;
+            case "Date/Time":
+                spot.setDateTime(value);
+                break;
+            case "Orientation":
+                spot.setOrientation(value);
+                break;
+            case "F-Number":
+                spot.setfNumber(value);
+                break;
+            case "Exposure Time":
+                spot.setExposureTime(value);
+                break;
+            case "Focal Length":
+                spot.setFocalLength(value);
+                break;
+            case "Flash":
+                spot.setFlash(value);
+                break;
+            case "ISO Speed Ratings":
+                spot.setiSOSpeedRatings(value);
+                break;
+            case "White Balance Mode":
+                spot.setWhiteBalanceMode(value);
+                break;
+            case "Aperture Value":
+                spot.setApertureValue(value);
+                break;
+            case "Shutter Speed Value":
+                spot.setShutterSpeedValue(value);
+                break;
+            case "Detected File Type Name":
+                spot.setDetectedFileTypeName(value);
+                break;
+            case "File Size":
+                spot.setFileSize(value);
+                break;
+            case "Brightness Value":
+                spot.setBrightnessValue(value);
+                break;
+            case "Exposure Bias Value":
+                spot.setExposureBiasValue(value);
+                break;
+            case "Max Aperture Value":
+                spot.setMaxApertureValue(value);
+                break;
+            case "Digital Zoom Ratio":
+                spot.setDigitalZoomRatio(value);
+                break;
+            case "Contrast":
+                spot.setContrast(value);
+                break;
+            case "Saturation":
+                spot.setSaturation(value);
+                break;
+            case "Sharpness":
+                spot.setSharpness(value);
+                break;
+
+        }
+
+    }
+
     private void setPic(ImageView imgV) {
 
         // Get the dimensions of the bitmap
@@ -88,7 +191,7 @@ public class CheckPhotoFragment extends Fragment {
 
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 65, stream);
         byte[] byteArray = stream.toByteArray();
         spot.setImagem(byteArray);
 

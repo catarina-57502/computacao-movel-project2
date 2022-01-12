@@ -101,7 +101,7 @@ public class VisionPhotoFragment extends Fragment {
 
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 40, baos);
                     InputStream inputStream = new ByteArrayInputStream(baos.toByteArray());
 
                     byte[] photoData = IOUtils.toByteArray(inputStream);
