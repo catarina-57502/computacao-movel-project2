@@ -38,7 +38,7 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
     private GoogleMap googleMap;
     FusedLocation fl;
 
-    static public LatLng lastLocation;
+    static public LatLng lastLocation = new LatLng(38.756977088908094,  -9.155466230678432);
 
 
     @Override
@@ -165,11 +165,16 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
     public void onLocationChanged(LocationResult locationResult) {
         Location l = locationResult.getLastLocation();
         LatLng atual = new LatLng( l.getLatitude(),  l.getLongitude());
-        lastLocation = atual;
-        googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(atual , 15.0f) );
-        googleMap.addMarker(new MarkerOptions()
-                .position(atual)
-                .title("EU"));
+        if(!lastLocation.equals(atual)){
+            lastLocation = atual;
+            if(googleMap != null){
+                googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(atual , 15.0f) );
+                googleMap.addMarker(new MarkerOptions()
+                        .position(atual)
+                        .title("EU"));
+            }
+        }
+
 
     }
 }

@@ -36,7 +36,7 @@
     <string name="recriar_foto">Recriar Foto</string>
     <string name="CameraOverlay">Camera Overlay</string>
     <string name="escolherFoto">Escolher foto Galeria</string>
-    <string name="repetir">Repetir Foto!</string>
-    <string name="continuar">Continuar!</string>
-    <string name="submeter">Submeter!</string>
+    <string name="repetir">Repetir Foto</string>
+    <string name="continuar">Confirmar</string>
+    <string name="submeter">Submeter</string>
 </resources>

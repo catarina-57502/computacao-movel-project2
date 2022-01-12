@@ -17,11 +17,8 @@
         <ImageView
             android:layout_marginTop="20dp"
             android:id="@+id/photoview"
-            android:layout_marginBottom="50dp"
             android:layout_width="350dp"
             android:layout_height="350dp" />
-
-
 
         <Button
             android:id="@+id/repetirBtn"
@@ -42,8 +39,6 @@
             android:text="@string/continuar"
             android:layout_width="200dp"
             android:layout_height="50dp"/>
-
-
 
 
     </LinearLayout>

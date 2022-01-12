@@ -79,7 +79,6 @@ public class FusedLocation extends LocationCallback {
 
     @Override
     public void onLocationResult(LocationResult locationResult) {
-        System.out.println("onLocationResult");
         notifyListeners(locationResult);
         super.onLocationResult(locationResult);
     }

@@ -2,6 +2,8 @@ package pt.fcul.cm2021.grupo9.shotop.processoAdicionar;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -187,14 +189,12 @@ public class CheckPhotoFragment extends Fragment {
         bmOptions.inPurgeable = true;
 
         bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
-        System.out.println(bitmap);
 
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 65, stream);
         byte[] byteArray = stream.toByteArray();
         spot.setImagem(byteArray);
-
 
 
         imgV.setImageBitmap(bitmap);

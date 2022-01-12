@@ -42,6 +42,7 @@ import org.json.JSONObject;
 import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.adapters.AdapterListCheckBox;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
+import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
 import pt.fcul.cm2021.grupo9.shotop.main.MainActivity;
 
 
@@ -71,6 +72,10 @@ public class VisionPhotoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 submit();
+                getParentFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frameFragment, new MapaFragment())
+                        .commit();
             }
         });
 
