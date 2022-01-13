@@ -11,6 +11,7 @@ import java.util.List;
 
 public class Spot {
 
+    String id;
     String nome;
     GeoPoint loc;
     String imagem;
@@ -39,6 +40,35 @@ public class Spot {
     String saturation;
     String sharpness;
 
+    public Spot(String id, String nome, GeoPoint loc, String imagem, List<String> caracteristicas, String imageHeight, String imageWidth, String model, String dateTime, String orientation, String fNumber, String exposureTime, String focalLength, String flash, String iSOSpeedRatings, String whiteBalanceMode, String apertureValue, String shutterSpeedValue, String detectedFileTypeName, String fileSize, String brightnessValue, String exposureBiasValue, String maxApertureValue, String digitalZoomRatio, String contrast, String saturation, String sharpness) {
+        this.id = id;
+        this.nome = nome;
+        this.loc = loc;
+        this.imagem = imagem;
+        this.caracteristicas = caracteristicas;
+        this.imageHeight = imageHeight;
+        this.imageWidth = imageWidth;
+        this.model = model;
+        this.dateTime = dateTime;
+        this.orientation = orientation;
+        this.fNumber = fNumber;
+        this.exposureTime = exposureTime;
+        this.focalLength = focalLength;
+        this.flash = flash;
+        this.iSOSpeedRatings = iSOSpeedRatings;
+        this.whiteBalanceMode = whiteBalanceMode;
+        this.apertureValue = apertureValue;
+        this.shutterSpeedValue = shutterSpeedValue;
+        this.detectedFileTypeName = detectedFileTypeName;
+        this.fileSize = fileSize;
+        this.brightnessValue = brightnessValue;
+        this.exposureBiasValue = exposureBiasValue;
+        this.maxApertureValue = maxApertureValue;
+        this.digitalZoomRatio = digitalZoomRatio;
+        this.contrast = contrast;
+        this.saturation = saturation;
+        this.sharpness = sharpness;
+    }
 
     public String getImagem() {
         return imagem;
