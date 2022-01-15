@@ -9,9 +9,9 @@
     <item android:title="@string/comunidade"
         android:id="@+id/community"
         android:icon="@drawable/ic_baseline_people_24" />
-    <item android:title="@string/CameraOverlay"
+    <item android:title="@string/MySpots"
         android:id="@+id/CameraOverlay"
-        android:icon="@drawable/ic_baseline_camera_alt_24" />
+        android:icon="@drawable/ic_baseline_format_list_bulleted_24" />
     <item android:title="@string/log_out"
         android:id="@+id/logout"
         android:icon="@drawable/ic_baseline_exit_to_app_24" />

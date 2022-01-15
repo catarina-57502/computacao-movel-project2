@@ -1,8 +1,6 @@
 package pt.fcul.cm2021.grupo9.shotop.main;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -19,10 +17,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
-import pt.fcul.cm2021.grupo9.shotop.ListSpotsFragment;
+import pt.fcul.cm2021.grupo9.shotop.MySpots.ListSpotsFragment;
 import pt.fcul.cm2021.grupo9.shotop.camera.CameraFragment;
 import pt.fcul.cm2021.grupo9.shotop.login.LoginFragment;
-import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.MetaDataFragment;
 import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
 import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.StartAddFragment;
@@ -102,7 +99,7 @@ public class MainActivity extends AppCompatActivity  {
             if(id == R.id.CameraOverlay) {
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.frameFragment,new CameraFragment())
+                        .replace(R.id.frameFragment,new ListSpotsFragment())
                         .commit();
             }
 
