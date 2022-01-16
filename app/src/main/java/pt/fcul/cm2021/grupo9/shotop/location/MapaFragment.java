@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -185,17 +186,20 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
         }
     }
 
+    @SuppressLint("PotentialBehaviorOverride")
     @RequiresApi(api = Build.VERSION_CODES.S)
     @Override
     public void onLocationChanged(LocationResult locationResult) {
 
+        ArrayList<LatLng> latlngs = new ArrayList<>();
+        MarkerOptions markerOptions = new MarkerOptions();
+
         getAllSpotsDB();
         if (allSpots.size() != 0) {
+
             byte[] bytes = Base64.getDecoder().decode(allSpots.get(0).getImagem());
             Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             Bitmap bitmap = getResizedBitmap(bm, 200);
-
-            String nomeSpot = allSpots.get(0).getNome();
 
             Location l = locationResult.getLastLocation();
             LatLng atual = new LatLng(l.getLatitude(), l.getLongitude());
@@ -207,35 +211,45 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
             mImageView.setImageBitmap(bitmap);
             Bitmap iconBitmap = mIconGenerator.makeIcon();
             IconGenerator iconGen = new IconGenerator(getApplicationContext());
-            MarkerOptions markerOptions = new MarkerOptions().
-                    icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)).
-                    position(atual).
-                    anchor(iconGen.getAnchorU(), iconGen.getAnchorV());
 
 
-            if (!lastLocation.equals(atual)) {
-                lastLocation = atual;
-                if (googleMap != null) {
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(atual, 15.0f));
-                    googleMap.addMarker(markerOptions).setTitle(nomeSpot);
-                }
+           for(Spot s: allSpots){
+               double lat = s.getLoc().getLatitude();
+               double lng = s.getLoc().getLongitude();
+              latlngs.add(new LatLng(lat, lng));
+           }
+
+            for (LatLng point : latlngs) {
+                markerOptions.
+                        icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)).
+                        position(point).
+                        anchor(iconGen.getAnchorU(), iconGen.getAnchorV());
+                    if (googleMap != null) {
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(atual, 15.0f));
+                        googleMap.addMarker(markerOptions);
+                    }
             }
 
-
-
+            assert googleMap != null;
             googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
-                    // on marker click we are getting the title of our marker
-                    // which is clicked and displaying it in a toast message.
-                    String markerName = marker.getTitle();
+                    GeoPoint locCliked = new GeoPoint(marker.getPosition().latitude, marker.getPosition().longitude);
+                    Spot spotClicked = null;
+                    for(Spot s: allSpots){
+                        if(s.getLoc().equals(locCliked)){
+                            spotClicked = s;
+                            break;
+                        }
+                    }
                     getParentFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.frameFragment, new SpotInfoFragment())
+                            .replace(R.id.frameFragment, new SpotInfoFragment(spotClicked))
                             .commit();
                     return false;
                 }
             });
+
 
         }
     }
@@ -301,7 +315,6 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
                                 );
                                 allSpots.add(sp);
                             }
-                            System.out.println(allSpots.size());
                         } else {
                             Log.d("TAG", "Error getting documents: ", task.getException());
                         }
