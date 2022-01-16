@@ -97,4 +97,5 @@ public class ListSpotsFragment extends Fragment {
                     }});
       return;
     }
+
 }

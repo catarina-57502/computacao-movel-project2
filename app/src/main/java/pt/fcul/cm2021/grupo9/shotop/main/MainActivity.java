@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity  {
             if(id == R.id.community) {
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.frameFragment, new ListSpotsFragment())
+                        .replace(R.id.frameFragment, new CameraFragment())
                         .commit();
             }
 
