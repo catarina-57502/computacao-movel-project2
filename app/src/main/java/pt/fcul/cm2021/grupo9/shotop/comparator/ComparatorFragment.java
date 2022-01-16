@@ -61,15 +61,15 @@ public class ComparatorFragment{
 
     private int compareMetadados(Spot ogPhoto, Spot newPhoto){ //50
         int result = 0;
-        //if(ogPhoto.getLoc().) ?
+
 
         if (ogPhoto.getApertureValue().matches("null") && newPhoto.getApertureValue().matches("null")){
             result +=1;
         }else if(!ogPhoto.getApertureValue().matches("null") && !newPhoto.getApertureValue().matches("null")){
             String[] ogAp = ogPhoto.getApertureValue().split("/");
             String[] newAp = newPhoto.getApertureValue().split("/");
-            double ogApp = Double.parseDouble(ogAp[1]);
-            double newApp = Double.parseDouble(newAp[1]);
+            double ogApp = Double.parseDouble(ogAp[1].replace(',','.'));
+            double newApp = Double.parseDouble(newAp[1].replace(',','.'));
 
             if(ogApp == newApp){
                 result +=1;
@@ -134,8 +134,8 @@ public class ComparatorFragment{
         }else if(!ogPhoto.getfNumber().matches("null") && !newPhoto.getfNumber().matches("null")){
             String[] ogF = ogPhoto.getfNumber().split("/");
             String[] newF = newPhoto.getfNumber().split("/");
-            double ogFf = Double.parseDouble(ogF[1]);
-            double newFf = Double.parseDouble(newF[1]);
+            double ogFf = Double.parseDouble(ogF[1].replace(',','.'));
+            double newFf = Double.parseDouble(newF[1].replace(',','.'));
 
             if(ogFf == newFf ){
                 result +=1;
@@ -148,7 +148,85 @@ public class ComparatorFragment{
             result +=1;
         } //ver range ditsto
 
-        //-----focal lenght
+        if (ogPhoto.getFocalLength().matches("null") && newPhoto.getFocalLength().matches("null")){
+            result +=1;
+        }else if(!ogPhoto.getFocalLength().matches("null") && !newPhoto.getFocalLength().matches("null")){
+            String[] ogFl = ogPhoto.getExposureBiasValue().split(" ");
+            String[] newFl = newPhoto.getExposureBiasValue().split(" ");
+            double ogFll= Double.parseDouble(ogFl[0].replace(',','.'));
+            double newFll= Double.parseDouble(newFl[0].replace(',','.'));
+
+            if(ogFll == newFll ){
+                result +=1;
+            }
+            //range...
+
+        }
+
+        if (ogPhoto.getiSOSpeedRatings().matches("null") && newPhoto.getiSOSpeedRatings().matches("null")){
+            result +=1;
+        }else if(!ogPhoto.getiSOSpeedRatings().matches("null") && !newPhoto.getiSOSpeedRatings().matches("null")){
+            int ogIso= Integer.parseInt(ogPhoto.getiSOSpeedRatings());
+            int newIso= Integer.parseInt(ogPhoto.getiSOSpeedRatings());
+
+            if(ogIso == newIso ){
+                result +=1;
+            }
+            //range...
+
+        }
+
+        //height,widht?
+        //if(ogPhoto.getLoc().) ?
+
+        if (ogPhoto.getMaxApertureValue().matches("null") && newPhoto.getMaxApertureValue().matches("null")){
+            result +=1;
+        }else if(!ogPhoto.getMaxApertureValue().matches("null") && !newPhoto.getMaxApertureValue().matches("null")){
+            String[] ogMa = ogPhoto.getMaxApertureValue().split("/");
+            String[] newMa = newPhoto.getMaxApertureValue().split("/");
+            double ogMaa = Double.parseDouble(ogMa[1].replace(',','.'));
+            double newMaa = Double.parseDouble(newMa[1].replace(',','.'));
+
+            if(ogMaa == newMaa){
+                result +=1;
+            }
+            //range...
+
+        }
+
+        if(newPhoto.getOrientation().matches(ogPhoto.getOrientation())){
+            result +=1;
+        } //ver range ditsto
+
+        if(newPhoto.getSaturation().matches(ogPhoto.getSaturation())){
+            result +=1;
+        } //ver range ditsto
+
+        if(newPhoto.getSharpness().matches(ogPhoto.getSharpness())){
+            result +=1;
+        } //ver range ditsto
+
+        if (ogPhoto.getShutterSpeedValue().matches("null") && newPhoto.getShutterSpeedValue().matches("null")){
+            result +=1;
+        }else if(!ogPhoto.getShutterSpeedValue().matches("null") && !newPhoto.getShutterSpeedValue().matches("null")){
+            String[] ogS = ogPhoto.getfNumber().replace("/"," ").split(" ");
+            String[] newS = newPhoto.getfNumber().replace("/"," ").split(" ");
+            int ogSS = Integer.parseInt(ogS[1]);
+            int newSS = Integer.parseInt(newS[1]);
+
+            if(ogSS == newSS ){
+                result +=1;
+            }
+            //range...
+
+        }
+
+        if(newPhoto.getWhiteBalanceMode().matches(ogPhoto.getWhiteBalanceMode())){
+            result +=1;
+        } //ver range ditsto
+
+
+
         return result;
     }
 }
