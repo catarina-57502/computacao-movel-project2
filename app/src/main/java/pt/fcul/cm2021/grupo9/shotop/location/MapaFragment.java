@@ -3,19 +3,27 @@ package pt.fcul.cm2021.grupo9.shotop.location;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,20 +31,35 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.maps.android.ui.IconGenerator;
 
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+
+import pt.fcul.cm2021.grupo9.shotop.MySpots.SpotInfoFragment;
+import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
 import pt.fcul.cm2021.grupo9.shotop.listeners.OnLocationChangedListener;
 import pt.fcul.cm2021.grupo9.shotop.R;
+import pt.fcul.cm2021.grupo9.shotop.main.MainActivity;
 
 
 public class MapaFragment extends Fragment implements OnLocationChangedListener {
 
-
     MapView mMapView;
     private GoogleMap googleMap;
     FusedLocation fl;
+    public static List<Spot> allSpots = new ArrayList<>();
 
     static public LatLng lastLocation = new LatLng(38.756977088908094,  -9.155466230678432);
 
@@ -50,7 +73,6 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
 
         fl = new FusedLocation(getContext());
         FusedLocation.addListener(this);
-
         View rootView = inflater.inflate(R.layout.fragment_mapa, container, false);
 
         BottomNavigationView b = getActivity().findViewById(R.id.bottom_navigation_view);
@@ -161,20 +183,128 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.S)
     @Override
     public void onLocationChanged(LocationResult locationResult) {
-        Location l = locationResult.getLastLocation();
-        LatLng atual = new LatLng( l.getLatitude(),  l.getLongitude());
-        if(!lastLocation.equals(atual)){
-            lastLocation = atual;
-            if(googleMap != null){
-                googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(atual , 15.0f) );
-                googleMap.addMarker(new MarkerOptions()
-                        .position(atual)
-                        .title("EU"));
+
+        getAllSpotsDB();
+        if (allSpots.size() != 0) {
+            byte[] bytes = Base64.getDecoder().decode(allSpots.get(0).getImagem());
+            Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            Bitmap bitmap = getResizedBitmap(bm, 200);
+
+            String nomeSpot = allSpots.get(0).getNome();
+
+            Location l = locationResult.getLastLocation();
+            LatLng atual = new LatLng(l.getLatitude(), l.getLongitude());
+
+
+            ImageView mImageView = new ImageView(getActivity());
+            IconGenerator mIconGenerator = new IconGenerator(getActivity());
+            mIconGenerator.setContentView(mImageView);
+            mImageView.setImageBitmap(bitmap);
+            Bitmap iconBitmap = mIconGenerator.makeIcon();
+            IconGenerator iconGen = new IconGenerator(getActivity());
+            MarkerOptions markerOptions = new MarkerOptions().
+                    icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)).
+                    position(atual).
+                    anchor(iconGen.getAnchorU(), iconGen.getAnchorV());
+
+
+            if (!lastLocation.equals(atual)) {
+                lastLocation = atual;
+                if (googleMap != null) {
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(atual, 15.0f));
+                    googleMap.addMarker(markerOptions).setTitle(nomeSpot);
+                }
             }
+
+
+
+
+            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    // on marker click we are getting the title of our marker
+                    // which is clicked and displaying it in a toast message.
+                    String markerName = marker.getTitle();
+                    getParentFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.frameFragment, new SpotInfoFragment())
+                            .commit();
+                    return false;
+                }
+            });
+
         }
+    }
+
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float)width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
 
 
+    public void getAllSpotsDB () {
+        MainActivity.db.collection("Spot")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String id = document.getId();
+                                String nome = (String) document.getData().get("nome");
+                                String imagem = (String) document.getData().get("imagem");
+                                String apertureValue = (String) document.getData().get("apertureValue");
+                                String brightnessValue = (String) document.getData().get("brightnessValue");
+                                String contrast = (String) document.getData().get("contrast");
+                                String dateTime = (String) document.getData().get("dateTime");
+                                String detectedFileTypeName = (String) document.getData().get("detectedFileTypeName");
+                                String digitalZoomRatio = (String) document.getData().get("digitalZoomRatio");
+                                String exposureBiasValue = (String) document.getData().get("exposureBiasValue");
+                                String exposureTime = (String) document.getData().get("exposureTime");
+                                String fNumber = (String) document.getData().get("fNumber");
+                                String fileSize = (String) document.getData().get("fileSize");
+                                String flash = (String) document.getData().get("flash");
+                                String focalLength = (String) document.getData().get("focalLength");
+                                String iSOSpeedRatings = (String) document.getData().get("iSOSpeedRatings");
+                                String imageHeight = (String) document.getData().get("imageHeight");
+                                String imageWidth = (String) document.getData().get("imageWidth");
+                                GeoPoint loc = (GeoPoint) document.getData().get("loc");
+                                String maxApertureValue = (String) document.getData().get("maxApertureValue");
+                                String model = (String) document.getData().get("model");
+                                String orientation = (String) document.getData().get("orientation");
+                                String saturation = (String) document.getData().get("saturation");
+                                String sharpness = (String) document.getData().get("sharpness");
+                                String shutterSpeedValue = (String) document.getData().get("shutterSpeedValue");
+                                String whiteBalanceMode = (String) document.getData().get("whiteBalanceMode");
+                                ArrayList<String> caracteristicas = (ArrayList<String>) document.getData().get("caracteristicas");
+                                Spot sp = new Spot(
+                                        id, nome, loc, imagem, caracteristicas,
+                                        imageHeight, imageWidth, model, dateTime,
+                                        orientation, fNumber, exposureTime, focalLength,
+                                        flash, iSOSpeedRatings, whiteBalanceMode, apertureValue,
+                                        shutterSpeedValue, detectedFileTypeName, fileSize, brightnessValue,
+                                        exposureBiasValue, maxApertureValue, digitalZoomRatio, contrast, saturation, sharpness
+                                );
+                                allSpots.add(sp);
+                            }
+                            System.out.println(allSpots.size());
+                        } else {
+                            Log.d("TAG", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 }
