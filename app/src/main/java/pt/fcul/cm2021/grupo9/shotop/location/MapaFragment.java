@@ -1,5 +1,7 @@
 package pt.fcul.cm2021.grupo9.shotop.location;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -199,12 +201,12 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
             LatLng atual = new LatLng(l.getLatitude(), l.getLongitude());
 
 
-            ImageView mImageView = new ImageView(getActivity());
-            IconGenerator mIconGenerator = new IconGenerator(getActivity());
+            ImageView mImageView = new ImageView(getApplicationContext());
+            IconGenerator mIconGenerator = new IconGenerator(getApplicationContext());
             mIconGenerator.setContentView(mImageView);
             mImageView.setImageBitmap(bitmap);
             Bitmap iconBitmap = mIconGenerator.makeIcon();
-            IconGenerator iconGen = new IconGenerator(getActivity());
+            IconGenerator iconGen = new IconGenerator(getApplicationContext());
             MarkerOptions markerOptions = new MarkerOptions().
                     icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)).
                     position(atual).
