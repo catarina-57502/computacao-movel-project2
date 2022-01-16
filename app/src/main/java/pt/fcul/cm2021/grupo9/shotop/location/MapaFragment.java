@@ -221,7 +221,6 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
 
 
 
-
             googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
