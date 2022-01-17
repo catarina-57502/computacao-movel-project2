@@ -64,7 +64,7 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
     FusedLocation fl;
     public static List<Spot> allSpots = new ArrayList<>();
 
-    static public LatLng lastLocation = new LatLng(38.756977088908094,  -9.155466230678432);
+    static public LatLng lastLocation;
 
 
     @Override
@@ -91,23 +91,6 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @SuppressLint("MissingPermission")
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
-                LatLng atual;
-                if(lastLocation == null){
-                    atual = new LatLng( 38.756977088908094,  -9.155466230678432);
-                }else{
-                    atual = lastLocation;
-                }
-
-                googleMap.animateCamera( CameraUpdateFactory.zoomTo( 10.0f ) );
-                googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(atual , 15.0f) );
-            }
-        });
 
         getAllSpotsDB();
 
@@ -192,10 +175,22 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
     @Override
     public void onLocationChanged(LocationResult locationResult) {
 
-        ArrayList<LatLng> latlngs = new ArrayList<>();
         MarkerOptions markerOptions = new MarkerOptions();
         Location l = locationResult.getLastLocation();
         LatLng atual = new LatLng(l.getLatitude(), l.getLongitude());
+        lastLocation = atual;
+
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @SuppressLint("MissingPermission")
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
+
+                googleMap.animateCamera( CameraUpdateFactory.zoomTo( 10.0f ) );
+                googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(atual , 15.0f) );
+            }
+        });
+
 
         if (allSpots.size() != 0) {
 
@@ -204,9 +199,6 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
                 byte[] bytes = Base64.getDecoder().decode(s.getImagem());
                 Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 Bitmap bitmap = getResizedBitmap(bm, 200);
-
-
-
 
                 ImageView mImageView = new ImageView(getApplicationContext());
                 IconGenerator mIconGenerator = new IconGenerator(getApplicationContext());
@@ -228,8 +220,11 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
                     }
             }
 
+
             assert googleMap != null;
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(atual, 15.0f));
+
+
 
             assert googleMap != null;
             googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
