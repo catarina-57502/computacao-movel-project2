@@ -17,9 +17,9 @@ import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
 public class ComparatorFragment{
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss");
 
-    public int compareTwoSpots(Spot ogPhoto, Spot newPhoto){
+    public double compareTwoSpots(Spot ogPhoto, Spot newPhoto){
 
-        int result = 0;
+        double result = 0;
 
 
         return result + compareDateTime(ogPhoto,newPhoto)
@@ -28,11 +28,11 @@ public class ComparatorFragment{
     }
 
 
-    private int compareDateTime(Spot ogPhoto, Spot newPhoto){ //20
+    private double compareDateTime(Spot ogPhoto, Spot newPhoto){ //20
 
         LocalDateTime ogPhotoDateTime = LocalDateTime.parse(ogPhoto.getDateTime(),formatter);
         LocalDateTime newPhotoDateTime = LocalDateTime.parse(newPhoto.getDateTime(),formatter);
-        int result = 0;
+        double result = 0;
 
         if( newPhotoDateTime.getMonthValue() == ogPhotoDateTime.getMonthValue()){ //month, for seasons,etc
             result =+ 5;
@@ -46,186 +46,193 @@ public class ComparatorFragment{
         } else{
             result  += 10;
         }
-
         return result;
     }
 
-    private int compareCaracteristicas(Spot ogPhoto, Spot newPhoto) { //30
+    private double compareCaracteristicas(Spot ogPhoto, Spot newPhoto) { //30
         ArrayList<String> ogPhotoCaracteristicas  = (ArrayList<String>) ogPhoto.getCaracteristicas();
         ArrayList<String> newPhotoCaracteristicas  = (ArrayList<String>) newPhoto.getCaracteristicas();
 
         Set<String> intersect = new HashSet<String>(ogPhotoCaracteristicas);
         intersect.retainAll(newPhotoCaracteristicas);
-        return intersect.size() * 30 /ogPhotoCaracteristicas.size(); //assumindo ogPhoto.caracteristicas.size !=0
+        return intersect.size() * 30.0 /ogPhotoCaracteristicas.size(); //assumindo ogPhoto.caracteristicas.size !=0
     }
 
-    private int compareMetadados(Spot ogPhoto, Spot newPhoto){ //50
-        int result = 0;
+    private double compareMetadados(Spot ogPhoto, Spot newPhoto){ //50 /15 params
+        double maxScore = 50.00;
+        double result = 0;
+        double onePerfectScore = maxScore/15.00;
+        double oneHalfScore = 0.5 * maxScore/15.00;
 
 
-        if (ogPhoto.getApertureValue().matches("null") && newPhoto.getApertureValue().matches("null")){
-            result +=1;
-        }else if(!ogPhoto.getApertureValue().matches("null") && !newPhoto.getApertureValue().matches("null")){
+        if (ogPhoto.getApertureValue() == null && newPhoto.getApertureValue()== null){
+            result += onePerfectScore;
+        }else if(ogPhoto.getApertureValue()!=null && newPhoto.getApertureValue()!=null){
             String[] ogAp = ogPhoto.getApertureValue().split("/");
             String[] newAp = newPhoto.getApertureValue().split("/");
             double ogApp = Double.parseDouble(ogAp[1].replace(',','.'));
             double newApp = Double.parseDouble(newAp[1].replace(',','.'));
 
             if(ogApp == newApp){
-                result +=1;
+                result += onePerfectScore;
+            }else if(newApp<=ogApp+5 && newApp>=ogApp-5){
+                result += oneHalfScore;
             }
-            //range...
-
         }
 
-        if (ogPhoto.getBrightnessValue().matches("null") && newPhoto.getBrightnessValue().matches("null")){
-            result +=1;
-        }else if(!ogPhoto.getBrightnessValue().matches("null") && !newPhoto.getBrightnessValue().matches("null")){
+        if (ogPhoto.getBrightnessValue()==null && newPhoto.getBrightnessValue()==null){
+            result +=onePerfectScore;
+        }else if(ogPhoto.getBrightnessValue()!=null && newPhoto.getBrightnessValue()!=null){
             double ogBv = Double.parseDouble(ogPhoto.getBrightnessValue().replace(',','.'));
             double newBv = Double.parseDouble(ogPhoto.getBrightnessValue().replace(',','.'));
 
             if(ogBv == newBv){
-                result +=1;
+                result +=onePerfectScore;
+            }else if(newBv<=ogBv+0.3 && newBv>=ogBv-0.3){
+                result += oneHalfScore;
             }
-            //range...
-
         }
 
-        if(newPhoto.getContrast().matches(ogPhoto.getContrast())){
-            result +=1;
-        } //ver range ditsto
+        if((ogPhoto.getContrast()== null && newPhoto.getContrast()== null )){
+            result += onePerfectScore;
+        }else if(ogPhoto.getContrast()!= null && newPhoto.getContrast()!= null &&
+                (newPhoto.getContrast().compareTo(ogPhoto.getContrast())==0)) {
+            result += onePerfectScore;
+        }
 
-        if(newPhoto.getDigitalZoomRatio().matches(ogPhoto.getDigitalZoomRatio())){
-            result +=1;
-        } //ver range ditsto
+        if((ogPhoto.getDigitalZoomRatio()== null && newPhoto.getDigitalZoomRatio()== null ) ){
+            result +=onePerfectScore;
+        }else if(ogPhoto.getDigitalZoomRatio()!= null && newPhoto.getDigitalZoomRatio()!= null &&
+                (newPhoto.getDigitalZoomRatio().compareTo(ogPhoto.getDigitalZoomRatio()) ==0)) {
+            result += onePerfectScore;
+        }
 
-        if (ogPhoto.getExposureBiasValue().matches("null") && newPhoto.getExposureBiasValue().matches("null")){
-            result +=1;
-        }else if(!ogPhoto.getExposureBiasValue().matches("null") && !newPhoto.getExposureBiasValue().matches("null")){
+
+        if (ogPhoto.getExposureBiasValue()== null && newPhoto.getExposureBiasValue()==null){
+            result +=onePerfectScore;
+        }else if(ogPhoto.getExposureBiasValue()!=null && newPhoto.getExposureBiasValue()!=null){
             String[] ogEx = ogPhoto.getExposureBiasValue().split(" ");
             String[] newEx = newPhoto.getExposureBiasValue().split(" ");
-            int ogExx= Integer.parseInt(ogEx[0]);
-            int newExx= Integer.parseInt(newEx[0]);
+            double ogExx= Double.parseDouble(ogEx[0]);
+            double newExx= Double.parseDouble(newEx[0]);
 
             if(ogExx == newExx ){
-                result +=1;
+                result +=onePerfectScore;
+            }else if(newExx<=ogExx+3 && newExx>=ogExx-3){
+                result += oneHalfScore;
             }
-            //range...
-
         }
 
-        if (ogPhoto.getExposureTime().matches("null") && newPhoto.getExposureTime().matches("null")){ //acho q nunca acontecerá mas..
-            result +=1;
-        }else if(!ogPhoto.getExposureTime().matches("null") && !newPhoto.getExposureTime().matches("null")){
+        if (ogPhoto.getExposureTime()==null && newPhoto.getExposureTime()==null){
+            result +=onePerfectScore;
+        }else if(ogPhoto.getExposureTime()!=null && newPhoto.getExposureTime()!=null){
             String[] ogEpt = ogPhoto.getExposureTime().split(" ");
             String[] newEpt = newPhoto.getExposureTime().split(" ");
             double ogEptt = Double.parseDouble(ogEpt[0]);
             double newEptt = Double.parseDouble(newEpt[0]);
 
             if(ogEptt == newEptt){
-                result +=1;
+                result +=onePerfectScore;
+            }else if(newEptt<=ogEptt+0.05 && newEptt>=ogEptt-0.05){
+                result += oneHalfScore;
             }
-            //range...
-
         }
 
-        if (ogPhoto.getfNumber().matches("null") && newPhoto.getfNumber().matches("null")){
-            result +=1;
-        }else if(!ogPhoto.getfNumber().matches("null") && !newPhoto.getfNumber().matches("null")){
+        if (ogPhoto.getfNumber()==null && newPhoto.getfNumber()==null){
+            result +=onePerfectScore;
+        }else if(ogPhoto.getfNumber()!=null && newPhoto.getfNumber()!=null){
             String[] ogF = ogPhoto.getfNumber().split("/");
             String[] newF = newPhoto.getfNumber().split("/");
             double ogFf = Double.parseDouble(ogF[1].replace(',','.'));
             double newFf = Double.parseDouble(newF[1].replace(',','.'));
 
             if(ogFf == newFf ){
-                result +=1;
+                result +=onePerfectScore;
+            }else if(newFf<=ogFf+5 && newFf>=ogFf-5){
+                result += oneHalfScore;
             }
-            //range...
-
         }
 
-        if(newPhoto.getFlash().matches(ogPhoto.getFlash())){
-            result +=1;
-        } //ver range ditsto
+        if((ogPhoto.getFlash()== null && newPhoto.getFlash()== null )){
+            result += onePerfectScore;
+        }else if(ogPhoto.getFlash()!= null && newPhoto.getFlash()!= null &&
+                (newPhoto.getFlash().compareTo(ogPhoto.getFlash())==0)) {
+            result += onePerfectScore;
+        }
 
-        if (ogPhoto.getFocalLength().matches("null") && newPhoto.getFocalLength().matches("null")){
-            result +=1;
-        }else if(!ogPhoto.getFocalLength().matches("null") && !newPhoto.getFocalLength().matches("null")){
-            String[] ogFl = ogPhoto.getExposureBiasValue().split(" ");
-            String[] newFl = newPhoto.getExposureBiasValue().split(" ");
+
+        if (ogPhoto.getFocalLength()==null && newPhoto.getFocalLength()==null){
+            result +=onePerfectScore;
+        }else if(ogPhoto.getFocalLength()!=null && newPhoto.getFocalLength()!=null){
+            String[] ogFl = ogPhoto.getFocalLength().split(" ");
+            String[] newFl = newPhoto.getFocalLength().split(" ");
             double ogFll= Double.parseDouble(ogFl[0].replace(',','.'));
             double newFll= Double.parseDouble(newFl[0].replace(',','.'));
 
             if(ogFll == newFll ){
-                result +=1;
+                result +=onePerfectScore;
+            }else if(newFll<=ogFll+6 && newFll>=ogFll-6){
+                result += oneHalfScore;
             }
-            //range...
-
         }
 
-        if (ogPhoto.getiSOSpeedRatings().matches("null") && newPhoto.getiSOSpeedRatings().matches("null")){
-            result +=1;
-        }else if(!ogPhoto.getiSOSpeedRatings().matches("null") && !newPhoto.getiSOSpeedRatings().matches("null")){
-            int ogIso= Integer.parseInt(ogPhoto.getiSOSpeedRatings());
+        if (ogPhoto.getiSOSpeedRatings()==null && newPhoto.getiSOSpeedRatings()==null){
+            result +=onePerfectScore;
+        }else if(ogPhoto.getiSOSpeedRatings()!=null && newPhoto.getiSOSpeedRatings()!=null){
+            int ogIso= Integer.parseInt(ogPhoto.getiSOSpeedRatings()); 
             int newIso= Integer.parseInt(ogPhoto.getiSOSpeedRatings());
 
             if(ogIso == newIso ){
-                result +=1;
+                result +=onePerfectScore;
+            }else if(newIso<=ogIso+100 && newIso>=ogIso-100){
+                result += oneHalfScore;
             }
-            //range...
-
         }
 
-        //height,widht?
-        //if(ogPhoto.getLoc().) ?
-
-        if (ogPhoto.getMaxApertureValue().matches("null") && newPhoto.getMaxApertureValue().matches("null")){
-            result +=1;
-        }else if(!ogPhoto.getMaxApertureValue().matches("null") && !newPhoto.getMaxApertureValue().matches("null")){
-            String[] ogMa = ogPhoto.getMaxApertureValue().split("/");
-            String[] newMa = newPhoto.getMaxApertureValue().split("/");
-            double ogMaa = Double.parseDouble(ogMa[1].replace(',','.'));
-            double newMaa = Double.parseDouble(newMa[1].replace(',','.'));
-
-            if(ogMaa == newMaa){
-                result +=1;
-            }
-            //range...
-
+        if((ogPhoto.getOrientation()== null && newPhoto.getOrientation()== null ) ){
+            result +=onePerfectScore;
+        }else if(ogPhoto.getOrientation()!= null && newPhoto.getOrientation()!= null &&
+                (newPhoto.getOrientation().compareTo(ogPhoto.getOrientation()) == 0)) {
+            result += onePerfectScore;
         }
 
-        if(newPhoto.getOrientation().matches(ogPhoto.getOrientation())){
-            result +=1;
-        } //ver range ditsto
 
-        if(newPhoto.getSaturation().matches(ogPhoto.getSaturation())){
-            result +=1;
-        } //ver range ditsto
-
-        if(newPhoto.getSharpness().matches(ogPhoto.getSharpness())){
-            result +=1;
-        } //ver range ditsto
-
-        if (ogPhoto.getShutterSpeedValue().matches("null") && newPhoto.getShutterSpeedValue().matches("null")){
-            result +=1;
-        }else if(!ogPhoto.getShutterSpeedValue().matches("null") && !newPhoto.getShutterSpeedValue().matches("null")){
-            String[] ogS = ogPhoto.getfNumber().replace("/"," ").split(" ");
-            String[] newS = newPhoto.getfNumber().replace("/"," ").split(" ");
-            int ogSS = Integer.parseInt(ogS[1]);
-            int newSS = Integer.parseInt(newS[1]);
-
-            if(ogSS == newSS ){
-                result +=1;
-            }
-            //range...
-
+        if((ogPhoto.getSaturation()== null && newPhoto.getSaturation()== null ) ){
+            result +=onePerfectScore;
+        }else if(ogPhoto.getSaturation()!= null && newPhoto.getSaturation()!= null &&
+                (newPhoto.getSaturation().compareTo(ogPhoto.getSaturation()) == 0)) {
+            result += onePerfectScore;
         }
 
-        if(newPhoto.getWhiteBalanceMode().matches(ogPhoto.getWhiteBalanceMode())){
-            result +=1;
-        } //ver range ditsto
 
+        if((ogPhoto.getSharpness()== null && newPhoto.getSharpness()== null ) ){
+            result +=onePerfectScore;
+        }else if(ogPhoto.getSharpness()!= null && newPhoto.getSharpness()!= null &&
+                (newPhoto.getSharpness().compareTo(ogPhoto.getSharpness()) == 0)) {
+            result += onePerfectScore;
+        }
 
+        if (ogPhoto.getShutterSpeedValue()==null && newPhoto.getShutterSpeedValue()==null){
+            result +=onePerfectScore;
+        }else if(ogPhoto.getShutterSpeedValue()!=null && newPhoto.getShutterSpeedValue()!=null){
+            String[] ogS = ogPhoto.getShutterSpeedValue().replace("/"," ").split(" ");
+            String[] newS = newPhoto.getShutterSpeedValue().replace("/"," ").split(" ");
+            int ogSs = Integer.parseInt(ogS[1]);
+            int newSs = Integer.parseInt(newS[1]);
+
+            if(ogSs == newSs ){
+                result +=onePerfectScore;
+            }else if(newSs<=ogSs+100 && newSs>=ogSs-100){
+                result += oneHalfScore;
+            }
+        }
+
+        if((ogPhoto.getWhiteBalanceMode()== null && newPhoto.getWhiteBalanceMode()== null ) ){
+            result +=onePerfectScore;
+        }else if(ogPhoto.getWhiteBalanceMode()!= null && newPhoto.getWhiteBalanceMode()!= null &&
+                (newPhoto.getWhiteBalanceMode().compareTo(ogPhoto.getWhiteBalanceMode()) == 0)) {
+            result += onePerfectScore;
+        }
 
         return result;
     }
