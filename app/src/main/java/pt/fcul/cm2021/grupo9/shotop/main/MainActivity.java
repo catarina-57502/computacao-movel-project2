@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity  {
             }
 
             if(id == R.id.map) {
+                MapaFragment.count = 0;
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.frameFragment,new MapaFragment())

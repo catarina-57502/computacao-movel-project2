@@ -63,9 +63,8 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
     private GoogleMap googleMap;
     FusedLocation fl;
     public static List<Spot> allSpots = new ArrayList<>();
+    static public LatLng lastLocation = new LatLng(38.757161150235916, -9.155208738614144);
     public static int count = 0;
-
-    static public LatLng lastLocation;
 
 
     @Override
@@ -93,8 +92,23 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
             e.printStackTrace();
         }
 
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @SuppressLint("MissingPermission")
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
+                LatLng atual;
+                if(lastLocation == null){
+                    atual = new LatLng( 38.756977088908094,  -9.155466230678432);
+                }else{
+                    atual = lastLocation;
+                }
 
+                googleMap.animateCamera( CameraUpdateFactory.zoomTo( 10.0f ) );
+                googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(atual , 15) );
 
+            }
+        });
 
         getAllSpotsDB();
 
@@ -180,23 +194,12 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
     public void onLocationChanged(LocationResult locationResult) {
 
         Location l = locationResult.getLastLocation();
-        LatLng atual = new LatLng(l.getLatitude(), l.getLongitude());
-        lastLocation = atual;
+        lastLocation = new LatLng(l.getLatitude(), l.getLongitude());
 
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @SuppressLint("MissingPermission")
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
+    }
 
-                if(count==0){
-                    googleMap.animateCamera( CameraUpdateFactory.zoomTo( 10.0f ) );
-                    googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(atual , 15) );
-                    count++;
-                }
-
-            }
-        });
+    @SuppressLint("PotentialBehaviorOverride")
+    public void markersOnMap(){
 
         MarkerOptions markerOptions = new MarkerOptions();
 
@@ -223,32 +226,37 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
                         position(new LatLng(lat,lng)).
                         anchor(iconGen.getAnchorU(), iconGen.getAnchorV());
 
-                    if (googleMap != null) {
-                        googleMap.addMarker(markerOptions);
+                if (googleMap != null) {
+                    if(count==0){
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 15.0f));
+                        count++;
                     }
+
+                    googleMap.addMarker(markerOptions);
+                }
             }
 
 
-            assert googleMap != null;
-            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-                    GeoPoint locCliked = new GeoPoint(marker.getPosition().latitude, marker.getPosition().longitude);
-                    Spot spotClicked = null;
-                    for(Spot s: allSpots){
-                        if(s.getLoc().equals(locCliked)){
-                            spotClicked = s;
-                            break;
+            if(googleMap!=null){
+                googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker) {
+                        GeoPoint locCliked = new GeoPoint(marker.getPosition().latitude, marker.getPosition().longitude);
+                        Spot spotClicked = null;
+                        for(Spot s: allSpots){
+                            if(s.getLoc().equals(locCliked)){
+                                spotClicked = s;
+                                break;
+                            }
                         }
+                        getParentFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.frameFragment, new SpotInfoFragment(spotClicked))
+                                .commit();
+                        return false;
                     }
-                    getParentFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.frameFragment, new SpotInfoFragment(spotClicked))
-                            .commit();
-                    return false;
-                }
-            });
-
+                });
+            }
 
         }
     }
