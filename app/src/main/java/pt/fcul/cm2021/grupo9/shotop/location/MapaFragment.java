@@ -197,32 +197,29 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
         getAllSpotsDB();
         if (allSpots.size() != 0) {
 
-            byte[] bytes = Base64.getDecoder().decode(allSpots.get(0).getImagem());
-            Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            Bitmap bitmap = getResizedBitmap(bm, 200);
+            for (Spot s : allSpots) {
 
-            Location l = locationResult.getLastLocation();
-            LatLng atual = new LatLng(l.getLatitude(), l.getLongitude());
+                byte[] bytes = Base64.getDecoder().decode(s.getImagem());
+                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                Bitmap bitmap = getResizedBitmap(bm, 200);
 
-
-            ImageView mImageView = new ImageView(getApplicationContext());
-            IconGenerator mIconGenerator = new IconGenerator(getApplicationContext());
-            mIconGenerator.setContentView(mImageView);
-            mImageView.setImageBitmap(bitmap);
-            Bitmap iconBitmap = mIconGenerator.makeIcon();
-            IconGenerator iconGen = new IconGenerator(getApplicationContext());
+                Location l = locationResult.getLastLocation();
+                LatLng atual = new LatLng(l.getLatitude(), l.getLongitude());
 
 
-           for(Spot s: allSpots){
-               double lat = s.getLoc().getLatitude();
-               double lng = s.getLoc().getLongitude();
-              latlngs.add(new LatLng(lat, lng));
-           }
+                ImageView mImageView = new ImageView(getApplicationContext());
+                IconGenerator mIconGenerator = new IconGenerator(getApplicationContext());
+                mIconGenerator.setContentView(mImageView);
+                mImageView.setImageBitmap(bitmap);
+                Bitmap iconBitmap = mIconGenerator.makeIcon();
+                IconGenerator iconGen = new IconGenerator(getApplicationContext());
 
-            for (LatLng point : latlngs) {
+                double lat = s.getLoc().getLatitude();
+                double lng = s.getLoc().getLongitude();
+
                 markerOptions.
                         icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)).
-                        position(point).
+                        position(new LatLng(lat,lng)).
                         anchor(iconGen.getAnchorU(), iconGen.getAnchorV());
                     if (googleMap != null) {
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(atual, 15.0f));
