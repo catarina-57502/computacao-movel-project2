@@ -2,6 +2,7 @@ package pt.fcul.cm2021.grupo9.shotop.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.AuthCredential;
@@ -36,10 +39,15 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import pt.fcul.cm2021.grupo9.shotop.R;
+import pt.fcul.cm2021.grupo9.shotop.entidades.User;
 import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
 import pt.fcul.cm2021.grupo9.shotop.main.MainActivity;
 
@@ -51,6 +59,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private GoogleSignInClient mGoogleSignInClient;
     private CallbackManager mCallbackManager;
+
+    private final ArrayList<User> allUsers = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,6 +116,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        getAllUsersDB();
         updateUI(currentUser);
     }
 
@@ -123,8 +135,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     .addOnCompleteListener(requireActivity(), task -> {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+                            System.out.println(firebaseUser.getProviderId());
+                            System.out.println(firebaseUser.getDisplayName());
+                            System.out.println(firebaseUser.getEmail());
+
+                            User user = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail());
+
+                            submit(user);
+                            updateUI(firebaseUser);
                         } else {
                             try {
                                 throw task.getException();
@@ -177,8 +197,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
                     if(task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        updateUI(user);
+                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+                        System.out.println(firebaseUser.getProviderId());
+                        System.out.println(firebaseUser.getDisplayName());
+                        System.out.println(firebaseUser.getEmail());
+
+                        User user = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail());
+
+                        submit(user);
+                        updateUI(firebaseUser);
                     } else {
                         updateUI(null);
                     }
@@ -200,8 +228,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+                            System.out.println(firebaseUser.getProviderId());
+                            System.out.println(firebaseUser.getDisplayName());
+                            System.out.println(firebaseUser.getEmail());
+
+                            User user = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail());
+
+                            submit(user);
+                            updateUI(firebaseUser);
                         } else {
                             // If sign in fails, display a message to the user.
                             updateUI(null);
@@ -261,5 +297,63 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     .replace(R.id.frameFragment, new MapaFragment())
                     .commit();
         }
+    }
+
+    private void submit(User user) {
+
+        System.out.println(getAllUsersDB().size());
+
+        for(int i = 0; i < getAllUsersDB().size(); i++) {
+            System.out.println("Ciclo " + i);
+            System.out.println(getAllUsersDB().get(i).getEmail());
+            System.out.println(user.getEmail());
+            if(getAllUsersDB().get(i).getEmail().equals(user.getEmail())){
+                System.out.println("ENTREI");
+                return;
+            }
+        }
+
+        MainActivity.db.collection("User")
+                .add(user)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("SHOTOP", "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("SHOTOP", "Error adding document", e);
+                    }
+                });
+    }
+
+    private ArrayList<User> getAllUsersDB() {
+
+        MainActivity.db.collection("User")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String id = document.getId();
+                            String nome = (String) document.getData().get("nome");
+                            String email = (String) document.getData().get("email");
+
+                            System.out.println("Nome: " + nome);
+                            System.out.println("Email: " + email);
+                            ArrayList<String> amigos = (ArrayList<String>) document.getData().get("amigos");
+                            User u = new User(
+                                    id,nome,email,amigos
+                            );
+                            System.out.println("Tamanho: " + allUsers.size());
+                            allUsers.add(u);
+                        }
+                    } else {
+                        Log.d("TAG", "Error getting documents: ", task.getException());
+                    }
+                });
+
+        return allUsers;
     }
 }

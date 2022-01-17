@@ -1,24 +1,41 @@
 package pt.fcul.cm2021.grupo9.shotop.login;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 import pt.fcul.cm2021.grupo9.shotop.R;
+import pt.fcul.cm2021.grupo9.shotop.adapters.AdapterSpot;
+import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
+import pt.fcul.cm2021.grupo9.shotop.entidades.User;
 import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
+import pt.fcul.cm2021.grupo9.shotop.main.MainActivity;
 
 public class RegisterFragment extends Fragment {
 
@@ -43,10 +60,12 @@ public class RegisterFragment extends Fragment {
         Button register = view.findViewById(R.id.buttonRegistar);
         register.setOnClickListener(l -> {
 
+            EditText etName = view.findViewById(R.id.et_name);
             EditText etEmail = view.findViewById(R.id.et_email);
             EditText etPassword = view.findViewById(R.id.et_password);
             EditText etConfirmPassword = view.findViewById(R.id.et_password2);
 
+            String name = etName.getText().toString();
             String email = etEmail.getText().toString();
             String password = etPassword.getText().toString();
             String confirmPassword = etConfirmPassword.getText().toString();
@@ -56,13 +75,13 @@ public class RegisterFragment extends Fragment {
             else if(!password.equals(confirmPassword))
                 Toast.makeText(requireActivity(), "Passwords don't match!", Toast.LENGTH_SHORT).show();
             else
-                createAccount(email, password);
+                createAccount(name, email, password);
         });
 
         return view;
     }
 
-    private void createAccount(String email, String password) {
+    private void createAccount(String name, String email, String password) {
 
         // [START create_user_with_email]
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -70,6 +89,8 @@ public class RegisterFragment extends Fragment {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         FirebaseUser user = mAuth.getCurrentUser();
+                        User u = new User(user.getProviderId(), name, user.getEmail());
+                        submit(u);
                         updateUI(user);
                     } else {
                         try {
@@ -99,5 +120,23 @@ public class RegisterFragment extends Fragment {
                     .replace(R.id.frameFragment, new MapaFragment())
                     .commit();
         }
+    }
+
+    private void submit(User user) {
+
+        MainActivity.db.collection("User")
+                .add(user)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("SHOTOP", "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("SHOTOP", "Error adding document", e);
+                    }
+                });
     }
 }
