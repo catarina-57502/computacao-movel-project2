@@ -63,6 +63,7 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
     private GoogleMap googleMap;
     FusedLocation fl;
     public static List<Spot> allSpots = new ArrayList<>();
+    public static int count = 0;
 
     static public LatLng lastLocation;
 
@@ -91,6 +92,9 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+
 
         getAllSpotsDB();
 
@@ -175,7 +179,6 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
     @Override
     public void onLocationChanged(LocationResult locationResult) {
 
-        MarkerOptions markerOptions = new MarkerOptions();
         Location l = locationResult.getLastLocation();
         LatLng atual = new LatLng(l.getLatitude(), l.getLongitude());
         lastLocation = atual;
@@ -186,11 +189,16 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
 
-                googleMap.animateCamera( CameraUpdateFactory.zoomTo( 10.0f ) );
-                googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(atual , 15.0f) );
+                if(count==0){
+                    googleMap.animateCamera( CameraUpdateFactory.zoomTo( 10.0f ) );
+                    googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(atual , 15) );
+                    count++;
+                }
+
             }
         });
 
+        MarkerOptions markerOptions = new MarkerOptions();
 
         if (allSpots.size() != 0) {
 
@@ -219,11 +227,6 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
                         googleMap.addMarker(markerOptions);
                     }
             }
-
-
-            assert googleMap != null;
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(atual, 15.0f));
-
 
 
             assert googleMap != null;
