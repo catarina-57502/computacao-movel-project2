@@ -109,6 +109,7 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
             }
         });
 
+        getAllSpotsDB();
 
         return rootView;
     }
@@ -193,8 +194,9 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
 
         ArrayList<LatLng> latlngs = new ArrayList<>();
         MarkerOptions markerOptions = new MarkerOptions();
+        Location l = locationResult.getLastLocation();
+        LatLng atual = new LatLng(l.getLatitude(), l.getLongitude());
 
-        getAllSpotsDB();
         if (allSpots.size() != 0) {
 
             for (Spot s : allSpots) {
@@ -203,8 +205,7 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
                 Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 Bitmap bitmap = getResizedBitmap(bm, 200);
 
-                Location l = locationResult.getLastLocation();
-                LatLng atual = new LatLng(l.getLatitude(), l.getLongitude());
+
 
 
                 ImageView mImageView = new ImageView(getApplicationContext());
@@ -221,11 +222,14 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
                         icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)).
                         position(new LatLng(lat,lng)).
                         anchor(iconGen.getAnchorU(), iconGen.getAnchorV());
+
                     if (googleMap != null) {
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(atual, 15.0f));
                         googleMap.addMarker(markerOptions);
                     }
             }
+
+            assert googleMap != null;
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(atual, 15.0f));
 
             assert googleMap != null;
             googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
