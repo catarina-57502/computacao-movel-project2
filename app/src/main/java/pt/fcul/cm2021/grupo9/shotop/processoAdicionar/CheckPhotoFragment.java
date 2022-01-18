@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 
 import pt.fcul.cm2021.grupo9.shotop.R;
+import pt.fcul.cm2021.grupo9.shotop.camera.BitmapTools;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
 
 
@@ -46,8 +47,10 @@ public class CheckPhotoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_check_photo, container, false);
         ImageView imgView = v.findViewById(R.id.photoview);
-        setPic(imgView);
+
         getDados();
+        setPic(imgView);
+
 
         Button btn = (Button) v.findViewById(R.id.repetirBtn);
 
@@ -90,6 +93,9 @@ public class CheckPhotoFragment extends Fragment {
                 Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
                 for (Directory directory : metadata.getDirectories()) {
                     for (Tag tag : directory.getTags()) {
+                        System.out.println("TESTE");
+                        System.out.println(tag.getTagName());
+                        System.out.println(tag.getDescription());
                         checkCategoria(tag.getTagName(),tag.getDescription());
                     }
                 }
@@ -102,11 +108,13 @@ public class CheckPhotoFragment extends Fragment {
     }
 
     public void checkCategoria(String ctg, String value){
+        int number = 1;
+        int number2 = 0;
         switch (ctg){
-            case "Image Height":
+            case "Exif Image Height":
                 spot.setImageHeight(value);
                 break;
-            case "Image Width":
+            case "Exif Image Width":
                 spot.setImageWidth(value);
                 break;
             case "Model":
@@ -169,9 +177,7 @@ public class CheckPhotoFragment extends Fragment {
             case "Sharpness":
                 spot.setSharpness(value);
                 break;
-
         }
-
     }
 
     private void setPic(ImageView imgV) {
@@ -192,6 +198,14 @@ public class CheckPhotoFragment extends Fragment {
 
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+        if(spot.getOrientation().toLowerCase().contains(("right"))){
+            bitmap = BitmapTools.rotate(bitmap,90);
+        }else{
+            bitmap = BitmapTools.rotate(bitmap,0);
+        }
+
+
         bitmap.compress(Bitmap.CompressFormat.JPEG, 65, stream);
         byte[] byteArray = stream.toByteArray();
         spot.setImagem(byteArray);

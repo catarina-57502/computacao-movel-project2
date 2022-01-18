@@ -46,6 +46,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.maps.android.ui.IconGenerator;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -61,10 +62,11 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
 
     MapView mMapView;
     private GoogleMap googleMap;
-    FusedLocation fl;
+
     public static List<Spot> allSpots = new ArrayList<>();
     static public LatLng lastLocation = new LatLng(38.757161150235916, -9.155208738614144);
     public static int count = 0;
+    private static int locChang = 0;
 
 
     @Override
@@ -72,19 +74,24 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("PotentialBehaviorOverride")
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        fl = new FusedLocation(getContext());
-        FusedLocation.addListener(this);
+
         View rootView = inflater.inflate(R.layout.fragment_mapa, container, false);
 
-        BottomNavigationView b = getActivity().findViewById(R.id.bottom_navigation_view);
-        b.setVisibility( View.VISIBLE);
+        FusedLocation.start(getContext());
+        FusedLocation.addListener(this);
+        getAllSpotsDB();
 
+        FusedLocation.addListener(this);
+
+        BottomNavigationView b = getActivity().findViewById(R.id.bottom_navigation_view);
+        b.setVisibility(View.VISIBLE);
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
-        mMapView.onResume(); // needed to get the map to display immediately
+        mMapView.onResume();
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -97,20 +104,32 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
-                LatLng atual;
-                if(lastLocation == null){
-                    atual = new LatLng( 38.756977088908094,  -9.155466230678432);
-                }else{
-                    atual = lastLocation;
-                }
-
                 googleMap.animateCamera( CameraUpdateFactory.zoomTo( 10.0f ) );
-                googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(atual , 15) );
-
+                googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(lastLocation , 15) );
             }
         });
 
-        getAllSpotsDB();
+        if (googleMap != null) {
+            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    GeoPoint locCliked = new GeoPoint(marker.getPosition().latitude, marker.getPosition().longitude);
+                    Spot spotClicked = null;
+                    for (Spot s : allSpots) {
+                        if (s.getLoc().equals(locCliked)) {
+                            spotClicked = s;
+                            break;
+                        }
+                    }
+                    getParentFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.frameFragment, new SpotInfoFragment(spotClicked))
+                            .commit();
+                    return false;
+                }
+            });
+        }
 
         return rootView;
     }
@@ -188,96 +207,31 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
         }
     }
 
-    @SuppressLint("PotentialBehaviorOverride")
+
     @RequiresApi(api = Build.VERSION_CODES.S)
     @Override
     public void onLocationChanged(LocationResult locationResult) {
-
         Location l = locationResult.getLastLocation();
-        lastLocation = new LatLng(l.getLatitude(), l.getLongitude());
-
-    }
-
-    @SuppressLint("PotentialBehaviorOverride")
-    public void markersOnMap(){
-
-        MarkerOptions markerOptions = new MarkerOptions();
-
-        if (allSpots.size() != 0) {
-
-            for (Spot s : allSpots) {
-
-                byte[] bytes = Base64.getDecoder().decode(s.getImagem());
-                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                Bitmap bitmap = getResizedBitmap(bm, 200);
-
-                ImageView mImageView = new ImageView(getApplicationContext());
-                IconGenerator mIconGenerator = new IconGenerator(getApplicationContext());
-                mIconGenerator.setContentView(mImageView);
-                mImageView.setImageBitmap(bitmap);
-                Bitmap iconBitmap = mIconGenerator.makeIcon();
-                IconGenerator iconGen = new IconGenerator(getApplicationContext());
-
-                double lat = s.getLoc().getLatitude();
-                double lng = s.getLoc().getLongitude();
-
-                markerOptions.
-                        icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)).
-                        position(new LatLng(lat,lng)).
-                        anchor(iconGen.getAnchorU(), iconGen.getAnchorV());
-
-                if (googleMap != null) {
-                    if(count==0){
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 15.0f));
-                        count++;
-                    }
-
-                    googleMap.addMarker(markerOptions);
-                }
-            }
-
-
-            if(googleMap!=null){
-                googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                    @Override
-                    public boolean onMarkerClick(Marker marker) {
-                        GeoPoint locCliked = new GeoPoint(marker.getPosition().latitude, marker.getPosition().longitude);
-                        Spot spotClicked = null;
-                        for(Spot s: allSpots){
-                            if(s.getLoc().equals(locCliked)){
-                                spotClicked = s;
-                                break;
-                            }
-                        }
-                        getParentFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.frameFragment, new SpotInfoFragment(spotClicked))
-                                .commit();
-                        return false;
-                    }
-                });
-            }
-
+        LatLng atualLocation = new LatLng(l.getLatitude(), l.getLongitude());
+        // Caso sai da fcul
+        if (l.getLatitude() != 38.757161150235916 && l.getLongitude() != -9.155208738614144 && locChang == 0) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(atualLocation, 15));
+            lastLocation = atualLocation;
+            locChang++;
         }
-    }
 
-    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        float bitmapRatio = (float)width / (float) height;
-        if (bitmapRatio > 1) {
-            width = maxSize;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxSize;
-            width = (int) (height * bitmapRatio);
+        // Caso andei
+        if (atualLocation.latitude != lastLocation.latitude && atualLocation.longitude != lastLocation.longitude) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(atualLocation, 15));
+            lastLocation = atualLocation;
+            locChang++;
         }
-        return Bitmap.createScaledBitmap(image, width, height, true);
+
+
     }
 
-
-    public void getAllSpotsDB () {
+    public void getAllSpotsDB() {
+        allSpots = new ArrayList<>();
         MainActivity.db.collection("Spot")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -321,6 +275,7 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
                                         exposureBiasValue, maxApertureValue, digitalZoomRatio, contrast, saturation, sharpness
                                 );
                                 allSpots.add(sp);
+                                markersOnMap(sp);
                             }
                         } else {
                             Log.d("TAG", "Error getting documents: ", task.getException());
@@ -328,4 +283,55 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
                     }
                 });
     }
+
+    @SuppressLint("PotentialBehaviorOverride")
+    public void markersOnMap(Spot s) {
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        byte[] bytes = Base64.getDecoder().decode(s.getImagem());
+        Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 10, baos);
+        Bitmap bitmap = getResizedBitmap(bm, 200);
+
+        ImageView mImageView = new ImageView(getApplicationContext());
+        IconGenerator mIconGenerator = new IconGenerator(getApplicationContext());
+        mIconGenerator.setContentView(mImageView);
+        mImageView.setImageBitmap(bitmap);
+        Bitmap iconBitmap = mIconGenerator.makeIcon();
+        IconGenerator iconGen = new IconGenerator(getApplicationContext());
+
+        double lat = s.getLoc().getLatitude();
+        double lng = s.getLoc().getLongitude();
+
+        markerOptions.
+                icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)).
+                position(new LatLng(lat, lng)).
+                anchor(iconGen.getAnchorU(), iconGen.getAnchorV());
+
+        if (googleMap != null) {
+            googleMap.addMarker(markerOptions);
+        }
+
+
+    }
+
+
+
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
+
+
 }

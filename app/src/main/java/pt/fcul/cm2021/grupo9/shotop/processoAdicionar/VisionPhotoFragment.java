@@ -158,6 +158,8 @@ public class VisionPhotoFragment extends Fragment {
     }
 
     public void submit(){
+
+
         MainActivity.db.collection("Spot")
                 .add(spot)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

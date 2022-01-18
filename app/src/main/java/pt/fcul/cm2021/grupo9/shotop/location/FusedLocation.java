@@ -24,7 +24,8 @@ public class FusedLocation extends LocationCallback {
     Context context;
     private String TAG = "FUSEDLOCATION";
     //TODO confirmar isto
-    private long TIME_BETWEEN_UPDATES = 1 * 500L;
+    private long TIME_BETWEEN_UPDATES = 1 * 1000L;
+    static int i = 0;
     private LocationRequest locationRequest;
     private FusedLocationProviderClient client;
 
@@ -80,6 +81,10 @@ public class FusedLocation extends LocationCallback {
     @Override
     public void onLocationResult(LocationResult locationResult) {
         notifyListeners(locationResult);
+        i++;
+        if(i < 5){
+            locationRequest.setInterval(20 * 1000L);
+        }
         super.onLocationResult(locationResult);
     }
 

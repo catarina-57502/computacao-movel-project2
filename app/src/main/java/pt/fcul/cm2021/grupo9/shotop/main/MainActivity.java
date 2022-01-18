@@ -3,29 +3,46 @@ package pt.fcul.cm2021.grupo9.shotop.main;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.ListView;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.facebook.login.LoginManager;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+
+import java.util.ArrayList;
 
 import pt.fcul.cm2021.grupo9.shotop.MySpots.ListSpotsFragment;
+import pt.fcul.cm2021.grupo9.shotop.adapters.AdapterSpot;
 import pt.fcul.cm2021.grupo9.shotop.camera.CameraFragment;
+import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
+import pt.fcul.cm2021.grupo9.shotop.listeners.OnLocationChangedListener;
+import pt.fcul.cm2021.grupo9.shotop.location.FusedLocation;
 import pt.fcul.cm2021.grupo9.shotop.login.LoginFragment;
 import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
 import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.StartAddFragment;
 
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity   {
 
     public static final String TAG_MAPS = "MAPS";
     public static final String TAG_LOGIN = "LOGIN";
@@ -33,12 +50,16 @@ public class MainActivity extends AppCompatActivity  {
 
     private FirebaseAuth mAuth;
     public static final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+    public static ArrayList<Spot> spots = new ArrayList<Spot>();
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+
+
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -56,13 +77,14 @@ public class MainActivity extends AppCompatActivity  {
 
         onItemSelectedListener();
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             // Add the fragment to the 'frameFragment' FrameLayout
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.frameFragment, new LoginFragment())
                     .commit();
         }
+        getAllSpotsDB();
 
     }
 
@@ -72,43 +94,49 @@ public class MainActivity extends AppCompatActivity  {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
-            if(id == R.id.logout) {
+            if (id == R.id.logout) {
                 mAuth = FirebaseAuth.getInstance();
                 mAuth.signOut();
                 LoginManager.getInstance().logOut();
 
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.frameFragment,new LoginFragment())
+                        .replace(R.id.frameFragment, new LoginFragment())
                         .commit();
             }
 
-            if(id == R.id.add) {
+            if (id == R.id.add) {
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.frameFragment, new StartAddFragment())
                         .commit();
             }
 
-            if(id == R.id.community) {
+            if (id == R.id.community) {
+                for(Spot i : spots){
+                    if (i.getNome().equals("policia22")){
+                        System.out.println("oi");
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.frameFragment, new CameraFragment(i))
+                                .commit();
+                    }
+
+                }
+            }
+
+            if (id == R.id.CameraOverlay) {
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.frameFragment, new CameraFragment())
+                        .replace(R.id.frameFragment, new ListSpotsFragment())
                         .commit();
             }
 
-            if(id == R.id.CameraOverlay) {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.frameFragment,new ListSpotsFragment())
-                        .commit();
-            }
-
-            if(id == R.id.map) {
+            if (id == R.id.map) {
                 MapaFragment.count = 0;
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.frameFragment,new MapaFragment())
+                        .replace(R.id.frameFragment, new MapaFragment())
                         .commit();
             }
 
@@ -122,13 +150,13 @@ public class MainActivity extends AppCompatActivity  {
         super.onActivityResult(requestCode, resultCode, data);
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frameFragment);
-        if(fragment != null) {
+        if (fragment != null) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    public static final int MY_PERMISSIONS_REQUEST_STORAGE = 98;
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 121;
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -136,7 +164,7 @@ public class MainActivity extends AppCompatActivity  {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0) {
                     if (ContextCompat.checkSelfPermission(this,
                             Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
@@ -148,11 +176,59 @@ public class MainActivity extends AppCompatActivity  {
                 }
                 return;
             }
-            case MY_PERMISSIONS_REQUEST_STORAGE:{
-
-            }
-
         }
+    }
+
+    public void getAllSpotsDB () {
+        MainActivity.db.collection("Spot")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String id = document.getId();
+                                String nome = (String) document.getData().get("nome");
+                                String imagem = (String) document.getData().get("imagem");
+                                String apertureValue = (String) document.getData().get("apertureValue");
+                                String brightnessValue = (String) document.getData().get("brightnessValue");
+                                String contrast = (String) document.getData().get("contrast");
+                                String dateTime = (String) document.getData().get("dateTime");
+                                String detectedFileTypeName = (String) document.getData().get("detectedFileTypeName");
+                                String digitalZoomRatio = (String) document.getData().get("digitalZoomRatio");
+                                String exposureBiasValue = (String) document.getData().get("exposureBiasValue");
+                                String exposureTime = (String) document.getData().get("exposureTime");
+                                String fNumber = (String) document.getData().get("fNumber");
+                                String fileSize = (String) document.getData().get("fileSize");
+                                String flash = (String) document.getData().get("flash");
+                                String focalLength = (String) document.getData().get("focalLength");
+                                String iSOSpeedRatings = (String) document.getData().get("iSOSpeedRatings");
+                                String imageHeight = (String) document.getData().get("imageHeight");
+                                String imageWidth = (String) document.getData().get("imageWidth");
+                                GeoPoint loc = (GeoPoint) document.getData().get("loc");
+                                String maxApertureValue = (String) document.getData().get("maxApertureValue");
+                                String model = (String) document.getData().get("model");
+                                String orientation = (String) document.getData().get("orientation");
+                                String saturation = (String) document.getData().get("saturation");
+                                String sharpness = (String) document.getData().get("sharpness");
+                                String shutterSpeedValue = (String) document.getData().get("shutterSpeedValue");
+                                String whiteBalanceMode = (String) document.getData().get("whiteBalanceMode");
+                                ArrayList<String> caracteristicas = (ArrayList<String>) document.getData().get("caracteristicas");
+                                Spot sp = new Spot(
+                                        id, nome, loc, imagem, caracteristicas,
+                                        imageHeight, imageWidth, model, dateTime,
+                                        orientation, fNumber, exposureTime, focalLength,
+                                        flash, iSOSpeedRatings, whiteBalanceMode, apertureValue,
+                                        shutterSpeedValue, detectedFileTypeName, fileSize, brightnessValue,
+                                        exposureBiasValue, maxApertureValue, digitalZoomRatio, contrast, saturation, sharpness
+                                );
+                                spots.add(sp);
+                            }
+                        } else {
+                            Log.d("TAG", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 
 

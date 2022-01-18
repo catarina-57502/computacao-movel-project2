@@ -1,8 +1,11 @@
 package pt.fcul.cm2021.grupo9.shotop.main;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -17,8 +20,10 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         getSupportActionBar().hide();
-        FusedLocation.start(this);
+
+
         setContentView(R.layout.activity_splash);
         new Handler().postDelayed(new Runnable(){
             @Override

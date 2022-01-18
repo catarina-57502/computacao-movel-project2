@@ -7,13 +7,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -32,8 +35,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
@@ -49,19 +54,43 @@ public class CameraFragment extends Fragment {
     static int height = 0;
     static Camera c = null;;
 
-
-
-
     public CameraFragment(){
-        spotOriginal = new Spot("Teste",new GeoPoint(MapaFragment.lastLocation.latitude,MapaFragment.lastLocation.longitude));
 
-        int width = 1280;
-        int height = 960;
-        spotOriginal.setImageWidth(Integer.toString(width));
-        spotOriginal.setImageHeight(Integer.toString(height));
+    }
 
-        spotOriginal.setOrientation("Horizontal");
-        //spotOriginal.setOrientation("Vertical");
+    public CameraFragment(Spot spot){
+        spotOriginal = spot;
+
+        String height = spot.getImageHeight();
+        String width = spot.getImageWidth();
+
+        /*
+        String[] strH = height.split(" ");
+        String[] strW = width.split(" ");
+        System.out.println(strH[0]);
+        System.out.println(strW[0]);
+        spotOriginal.setImageHeight(strH[0]);
+        spotOriginal.setImageWidth(strW[0]);
+        */
+
+        String img = spot.getImagem();
+        byte[] bytes = Base64.getDecoder().decode(img);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+        System.out.println(bitmap.getHeight());
+        System.out.println(bitmap.getWidth());
+
+        spotOriginal.setImageHeight("1920");
+        spotOriginal.setImageWidth("1080");
+
+        String orient = spotOriginal.getOrientation();
+
+        if(orient.toLowerCase().contains(("right"))){
+            spotOriginal.setOrientation("Vertical");
+        }else{
+            spotOriginal.setOrientation("Horizontal");
+        }
+
         resolucao();
     }
 
@@ -69,34 +98,27 @@ public class CameraFragment extends Fragment {
         try{
             width = Integer.parseInt(spotOriginal.getImageWidth());
             height = Integer.parseInt(spotOriginal.getImageHeight());
-            System.out.println(height);
-            System.out.println(width);
         }
         catch (NumberFormatException ex){
             ex.printStackTrace();
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_camera, container, false);
         //Confirmar foto original
+
         if(spotOriginal.getOrientation() == "Horizontal"){
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
-            layoutParams.width = width;
-            layoutParams.height = height;
-
         }
+
+        ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
 
 
         FrameLayout preview = (FrameLayout) v.findViewById(R.id.camera_preview);
 
-
-
-
-
-        orientation = getActivity().getResources().getConfiguration().orientation;
         Camera c = getCameraInstance();
 
         BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation_view);
@@ -113,27 +135,28 @@ public class CameraFragment extends Fragment {
         return v;
     }
 
-    /** A safe way to get an instance of the Camera object. */
+    private static final String CAMERA_PARAM_ORIENTATION = "orientation";
+    private static final String CAMERA_PARAM_LANDSCAPE = "landscape";
+    private static final String CAMERA_PARAM_PORTRAIT = "portrait";
+
+
     public static Camera getCameraInstance(){
 
         try {
             c = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
-            c.stopPreview();
-            c.setDisplayOrientation(90);
             Camera.Parameters parameters = c.getParameters();
-
-
-
-
-            parameters.setPictureSize(width,height);
+            c.stopPreview();
+            Camera.Parameters param = c.getParameters();
+            Log.i("camera", "parameters: " + param.flatten());
 
             if (spotOriginal.getOrientation() == "Horizontal") {
-                c.setDisplayOrientation(270);
-            } else {
-
                 c.setDisplayOrientation(0);
-            }
+                parameters.set(CAMERA_PARAM_ORIENTATION, CAMERA_PARAM_PORTRAIT);
+            } else {
+                c.setDisplayOrientation(90);
+                parameters.set(CAMERA_PARAM_ORIENTATION, CAMERA_PARAM_LANDSCAPE);
 
+            }
             c.setParameters(parameters);
             c.startPreview();
         }
@@ -143,12 +166,19 @@ public class CameraFragment extends Fragment {
         return c;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void addView() {
 
         LayoutInflater controlInflater = LayoutInflater.from(getContext());
         View viewControl = controlInflater.inflate(R.layout.overlay, null);
+        
+
         ImageView img = viewControl.findViewById(R.id.imageView1);
-        img.setImageResource(R.drawable.teste);
+
+        byte[] bytes = Base64.getDecoder().decode(spotOriginal.getImagem());
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+        img.setImageBitmap(bitmap);
         Button btn = (Button) viewControl.findViewById(R.id.buttonPhoto);
 
         btn.setOnClickListener(new View.OnClickListener() {
@@ -176,6 +206,11 @@ public class CameraFragment extends Fragment {
                 e.printStackTrace();
             }
             try {
+                if (spotOriginal.getOrientation() == "Vertical") {
+                    Bitmap bitmap = BitmapTools.toBitmap(data);
+                    bitmap = BitmapTools.rotate(bitmap, 90);
+                    data = BitmapTools.toBytes(bitmap);
+                }
                 FileOutputStream fos = new FileOutputStream(pictureFile);
                 fos.write(data);
                 fos.close();
