@@ -64,6 +64,7 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
     MapView mMapView;
     SearchView searchView;
     private GoogleMap googleMap;
+    public final static double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
 
     public static List<Spot> allSpots = new ArrayList<>();
     static public LatLng lastLocation = new LatLng(38.757161150235916, -9.155208738614144);
@@ -106,6 +107,14 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
+                googleMap.setMyLocationEnabled(true);
+                googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+                    @Override
+                    public boolean onMyLocationButtonClick() {
+                        googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(lastLocation , 15) );
+                        return false;
+                    }
+                });
                 googleMap.animateCamera( CameraUpdateFactory.zoomTo( 10.0f ) );
                 googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(lastLocation , 15) );
                 if (googleMap != null) {
@@ -132,6 +141,44 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
             }
         });
 
+
+        /**
+        searchView = rootView.findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                callSearch(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+//              if (searchView.isExpanded() && TextUtils.isEmpty(newText)) {
+                //callSearch(newText);
+//              }
+                return true;
+            }
+
+            public void callSearch(String query) {
+                int i = 0;
+                System.out.println(query);
+                for (Spot s : allSpots) {
+                    if(distanceKm(lastLocation.latitude,lastLocation.longitude, s.getLoc().getLatitude(),s.getLoc().getLongitude())<=5){
+                        for(String c : s.getCaracteristicas()){
+                            if (query.toUpperCase().compareTo(c.toUpperCase()) == 0) {
+                                i++;
+                                //
+                            }
+                        }
+
+                    }
+                }
+                //googleMap.animateCamera( CameraUpdateFactory.zoomTo( 10.0f ) );
+                googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(lastLocation , 12) );
+                System.out.println("existe " + i + "com essa caractersistica");
+            }
+
+        }); */
 
         return rootView;
     }
@@ -335,5 +382,20 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
         return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
+
+    private int distanceKm(double userLat, double userLng,
+                                            double markerLat, double markerLng) {
+
+        double latDistance = Math.toRadians(userLat - markerLat);
+        double lngDistance = Math.toRadians(userLng - markerLng);
+
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(userLat)) * Math.cos(Math.toRadians(markerLat))
+                * Math.sin(lngDistance / 2) * Math.sin(lngDistance / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return (int) (Math.round(AVERAGE_RADIUS_OF_EARTH_KM * c));
+    }
 
 }
