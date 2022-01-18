@@ -169,6 +169,5 @@ public class StartAddFragment extends Fragment  {
                     .commit();
         }
 
-
     }
 }

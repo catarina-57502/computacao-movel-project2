@@ -61,17 +61,7 @@ public class CameraFragment extends Fragment {
     public CameraFragment(Spot spot){
         spotOriginal = spot;
 
-        String height = spot.getImageHeight();
-        String width = spot.getImageWidth();
 
-        /*
-        String[] strH = height.split(" ");
-        String[] strW = width.split(" ");
-        System.out.println(strH[0]);
-        System.out.println(strW[0]);
-        spotOriginal.setImageHeight(strH[0]);
-        spotOriginal.setImageWidth(strW[0]);
-        */
 
         String img = spot.getImagem();
         byte[] bytes = Base64.getDecoder().decode(img);
@@ -218,6 +208,8 @@ public class CameraFragment extends Fragment {
 
             } catch (IOException e) {
 
+            }finally {
+                //  mudar fragmento
             }
         }
     };

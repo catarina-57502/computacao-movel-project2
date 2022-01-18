@@ -41,4 +41,9 @@
     <string name="submeter">Submeter</string>
     <string name="MySpots">Meus Spots</string>
     <string name="foto">Tirar Foto!</string>
+    <string name="participar">Participar No Desafio</string>
+    <string name="cameraEscolha">Escolha que processo deseja seguir:</string>
+    <string name="desafio">DESAFIO</string>
+    <string name="btnCamera1">Camera Default</string>
+    <string name="btnCamera2">Sobrepor a imagem</string>
 </resources>
