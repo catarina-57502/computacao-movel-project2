@@ -73,6 +73,8 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
     public static int count = 0;
     private static int locChang = 0;
 
+    public ArrayList<Marker> markers = new ArrayList<>();
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -140,6 +142,7 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
                         }
                     });
                 }
+                markersOnMap();
             }
         });
 
@@ -283,13 +286,25 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
         }
 
         // Caso andei
-        if (atualLocation.latitude != lastLocation.latitude && atualLocation.longitude != lastLocation.longitude) {
+
+        if (truncate(atualLocation.latitude,4) != truncate(lastLocation.latitude,4) && truncate(atualLocation.longitude,4) != truncate(lastLocation.longitude,4)) {
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(atualLocation, 15));
             lastLocation = atualLocation;
             locChang++;
         }
 
 
+    }
+
+    double truncate(double number, int precision)
+    {
+        double prec = Math.pow(10, precision);
+        int integerPart = (int) number;
+        double fractionalPart = number - integerPart;
+        fractionalPart *= prec;
+        int fractPart = (int) fractionalPart;
+        fractionalPart = (double) (integerPart) + (double) (fractPart)/prec;
+        return fractionalPart;
     }
 
     public void getAllSpotsDB() {
@@ -337,8 +352,8 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
                                         exposureBiasValue, maxApertureValue, digitalZoomRatio, contrast, saturation, sharpness
                                 );
                                 allSpots.add(sp);
-                                markersOnMap(sp);
                             }
+                            markersOnMap();
                         } else {
                             Log.d("TAG", "Error getting documents: ", task.getException());
                         }
@@ -346,35 +361,36 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
                 });
     }
 
-    @SuppressLint("PotentialBehaviorOverride")
-    public void markersOnMap(Spot s) {
 
-        MarkerOptions markerOptions = new MarkerOptions();
-        byte[] bytes = Base64.getDecoder().decode(s.getImagem());
-        Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 10, baos);
-        Bitmap bitmap = getResizedBitmap(bm, 200);
+    public void markersOnMap() {
 
-        ImageView mImageView = new ImageView(getApplicationContext());
-        IconGenerator mIconGenerator = new IconGenerator(getApplicationContext());
-        mIconGenerator.setContentView(mImageView);
-        mImageView.setImageBitmap(bitmap);
-        Bitmap iconBitmap = mIconGenerator.makeIcon();
-        IconGenerator iconGen = new IconGenerator(getApplicationContext());
+        for(Spot s : allSpots){
+            MarkerOptions markerOptions = new MarkerOptions();
+            byte[] bytes = Base64.getDecoder().decode(s.getImagem());
+            Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.JPEG, 10, baos);
+            Bitmap bitmap = getResizedBitmap(bm, 200);
 
-        double lat = s.getLoc().getLatitude();
-        double lng = s.getLoc().getLongitude();
+            ImageView mImageView = new ImageView(getApplicationContext());
+            IconGenerator mIconGenerator = new IconGenerator(getApplicationContext());
+            mIconGenerator.setContentView(mImageView);
+            mImageView.setImageBitmap(bitmap);
+            Bitmap iconBitmap = mIconGenerator.makeIcon();
+            IconGenerator iconGen = new IconGenerator(getApplicationContext());
 
-        markerOptions.
-                icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)).
-                position(new LatLng(lat, lng)).
-                anchor(iconGen.getAnchorU(), iconGen.getAnchorV());
+            double lat = s.getLoc().getLatitude();
+            double lng = s.getLoc().getLongitude();
 
-        if (googleMap != null) {
-            Marker newMarker = googleMap.addMarker(markerOptions);
-            myMarkers.add(newMarker);
+            markerOptions.
+                    icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)).
+                    position(new LatLng(lat, lng)).
+                    anchor(iconGen.getAnchorU(), iconGen.getAnchorV());
 
+            if (googleMap != null) {
+                Marker newMarker = googleMap.addMarker(markerOptions);
+                myMarkers.add(newMarker);
+            }
         }
 
 

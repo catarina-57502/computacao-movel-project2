@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 
@@ -56,6 +57,8 @@ public class AdapterSpot extends BaseAdapter {
 
         byte[] bytes = Base64.getDecoder().decode(spots.get(position).getImagem());
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos);
         imageView.setImageBitmap(bitmap);
 
         return convertView;
