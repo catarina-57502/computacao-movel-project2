@@ -16,6 +16,8 @@ import android.widget.ListView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -33,22 +35,26 @@ import pt.fcul.cm2021.grupo9.shotop.main.MainActivity;
 public class ListSpotsFragment extends Fragment {
 
     View v;
+    FirebaseUser firebaseUser;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v =  inflater.inflate(R.layout.fragment_list_spots, container, false);
-        getAllSpotsDB();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(firebaseUser != null) {
+            getMySpotsDB();
+        }
         return v;
     }
 
-    public void getAllSpotsDB(){
+    public void getMySpotsDB(){
 
         MainActivity.db.collection("Spot")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        ArrayList<Spot> allSpots = new ArrayList<>();
+                        ArrayList<Spot> mySpots = new ArrayList<>();
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 String id = document.getId();
@@ -78,18 +84,23 @@ public class ListSpotsFragment extends Fragment {
                                 String shutterSpeedValue = (String) document.getData().get("shutterSpeedValue");
                                 String whiteBalanceMode = (String) document.getData().get("whiteBalanceMode");
                                 ArrayList<String> caracteristicas = (ArrayList<String>) document.getData().get("caracteristicas");
+                                String idUser = (String) document.getData().get("idUser");
                                 Spot sp = new Spot(
-                                        id,nome,loc,imagem,caracteristicas,
+                                        id,nome,loc,imagem,caracteristicas,idUser,
                                         imageHeight,imageWidth,model,dateTime,
                                         orientation,fNumber,exposureTime,focalLength,
                                         flash,iSOSpeedRatings,whiteBalanceMode,apertureValue,
                                         shutterSpeedValue,detectedFileTypeName,fileSize,brightnessValue,
                                         exposureBiasValue,maxApertureValue,digitalZoomRatio,contrast,saturation,sharpness
                                 );
-                                allSpots.add(sp);
+
+                                if(sp.getIdUser()!=null && sp.getIdUser().equals(firebaseUser.getUid())){
+                                    mySpots.add(sp);
+                                }
+
                             }
                             ListView listv = v.findViewById(R.id.listViewSpots);
-                            AdapterSpot adapter = new AdapterSpot(allSpots,getContext());
+                            AdapterSpot adapter = new AdapterSpot(mySpots,getContext());
                             listv.setAdapter(adapter);
                         } else {
                             Log.d("TAG", "Error getting documents: ", task.getException());

@@ -23,11 +23,14 @@ import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.FaceAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -71,6 +74,11 @@ public class VisionPhotoFragment extends Fragment {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                if(firebaseUser != null) {
+                    String id = firebaseUser.getUid();
+                    spot.setIdUser(id);
+                }
                 submit();
                 getParentFragmentManager()
                         .beginTransaction()
@@ -158,7 +166,6 @@ public class VisionPhotoFragment extends Fragment {
     }
 
     public void submit(){
-
 
         MainActivity.db.collection("Spot")
                 .add(spot)
