@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -61,6 +62,7 @@ import pt.fcul.cm2021.grupo9.shotop.main.MainActivity;
 
 public class MapaFragment extends Fragment implements OnLocationChangedListener {
 
+    ArrayList<Marker> myMarkers = new ArrayList<Marker>();
     MapView mMapView;
     SearchView searchView;
     private GoogleMap googleMap;
@@ -142,7 +144,7 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
         });
 
 
-        /**
+
         searchView = rootView.findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -153,32 +155,43 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
 
             @Override
             public boolean onQueryTextChange(String newText) {
-//              if (searchView.isExpanded() && TextUtils.isEmpty(newText)) {
-                //callSearch(newText);
-//              }
+
+               if (searchView.getQuery().length() == 0) {
+                    showAllMarkers();
+                }
                 return true;
             }
 
             public void callSearch(String query) {
-                int i = 0;
-                System.out.println(query);
+                int resultingSpots = 0; //numero total de spots match
                 for (Spot s : allSpots) {
-                    if(distanceKm(lastLocation.latitude,lastLocation.longitude, s.getLoc().getLatitude(),s.getLoc().getLongitude())<=5){
+                    int foundCaracteristica = 0; //para ver caso pesquisou nas caracteristicas desse spot, se encontrou ou nao
+                    if(distanceKm(lastLocation.latitude,lastLocation.longitude, s.getLoc().getLatitude(),s.getLoc().getLongitude())<=5){ //raio 5 km
                         for(String c : s.getCaracteristicas()){
                             if (query.toUpperCase().compareTo(c.toUpperCase()) == 0) {
-                                i++;
-                                //
+                                foundCaracteristica++;
+                                resultingSpots++;
+                                showMarker(s); //para o caso quando é feito uma pesquisa sem resultados (mapa sem markers) e depois é feita outra logo a seguir (sem apagar totalmente a searchview) mas que ja tem results
+                                break;
                             }
                         }
-
+                        if(foundCaracteristica==0){ //nenhuma das caracteristicas do spot corresponde a query,esconder
+                            hideMarker(s);
+                        }
+                    }else{ //spot esta a mais de 5 km do curr locatin,esconder
+                        hideMarker(s);
                     }
                 }
-                //googleMap.animateCamera( CameraUpdateFactory.zoomTo( 10.0f ) );
-                googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(lastLocation , 12) );
-                System.out.println("existe " + i + "com essa caractersistica");
+                if(resultingSpots!=0){ //foi enonctrado spots, alterar zoom
+                    googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(lastLocation , 12) );
+                }else{ // este nao tá a aparecer atm
+                    Toast tst = Toast.makeText(getApplicationContext(),"Num raio de 5km não foram encontrados resultados :(",Toast.LENGTH_SHORT);
+                }
+
+
             }
 
-        }); */
+        });
 
         return rootView;
     }
@@ -359,7 +372,9 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
                 anchor(iconGen.getAnchorU(), iconGen.getAnchorV());
 
         if (googleMap != null) {
-            googleMap.addMarker(markerOptions);
+            Marker newMarker = googleMap.addMarker(markerOptions);
+            myMarkers.add(newMarker);
+
         }
 
 
@@ -396,6 +411,38 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
         return (int) (Math.round(AVERAGE_RADIUS_OF_EARTH_KM * c));
+    }
+
+    private void hideMarker(Spot s) {
+        for (Marker m : myMarkers) {
+            if (m.getPosition().latitude == s.getLoc().getLatitude() && m.getPosition().longitude == s.getLoc().getLongitude()) {
+                m.setVisible(false);
+            }
+
+        }
+    }
+
+    private void showAllMarkers(){
+        for (Spot s : allSpots) {
+            for (Marker m : myMarkers) {
+                if (s.getLoc().getLatitude() == m.getPosition().latitude && s.getLoc().getLongitude() == m.getPosition().longitude) {
+                    if (!m.isVisible()) {
+                        m.setVisible(true);
+                    }
+                }
+            }
+        }
+    }
+
+    private void showMarker(Spot s) {
+        for (Marker m : myMarkers) {
+            if (m.getPosition().latitude == s.getLoc().getLatitude() && m.getPosition().longitude == s.getLoc().getLongitude()) {
+                if(!m.isVisible()){
+                    m.setVisible(true);
+                }
+
+            }
+        }
     }
 
 }
