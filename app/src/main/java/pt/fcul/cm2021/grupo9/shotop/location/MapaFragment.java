@@ -27,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SearchView;
 
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -61,6 +62,7 @@ import pt.fcul.cm2021.grupo9.shotop.main.MainActivity;
 public class MapaFragment extends Fragment implements OnLocationChangedListener {
 
     MapView mMapView;
+    SearchView searchView;
     private GoogleMap googleMap;
 
     public static List<Spot> allSpots = new ArrayList<>();
@@ -106,30 +108,30 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
                 googleMap = mMap;
                 googleMap.animateCamera( CameraUpdateFactory.zoomTo( 10.0f ) );
                 googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(lastLocation , 15) );
+                if (googleMap != null) {
+                    googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            GeoPoint locCliked = new GeoPoint(marker.getPosition().latitude, marker.getPosition().longitude);
+                            Spot spotClicked = null;
+                            for (Spot s : allSpots) {
+                                if (s.getLoc().equals(locCliked)) {
+                                    spotClicked = s;
+                                    break;
+                                }
+                            }
+                            getParentFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.frameFragment, new SpotInfoFragment(spotClicked))
+                                    .commit();
+                            return false;
+                        }
+                    });
+                }
             }
         });
 
-        if (googleMap != null) {
-            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-                    GeoPoint locCliked = new GeoPoint(marker.getPosition().latitude, marker.getPosition().longitude);
-                    Spot spotClicked = null;
-                    for (Spot s : allSpots) {
-                        if (s.getLoc().equals(locCliked)) {
-                            spotClicked = s;
-                            break;
-                        }
-                    }
-                    getParentFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.frameFragment, new SpotInfoFragment(spotClicked))
-                            .commit();
-                    return false;
-                }
-            });
-        }
 
         return rootView;
     }
