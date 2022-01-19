@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Locale;
 
 import pt.fcul.cm2021.grupo9.shotop.R;
+import pt.fcul.cm2021.grupo9.shotop.comparator.ParticipateChallengeFragment;
 import pt.fcul.cm2021.grupo9.shotop.desafio.DesafioCamerasFragment;
 import pt.fcul.cm2021.grupo9.shotop.desafio.SpotTools;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
@@ -230,12 +231,14 @@ public class CameraFragment extends Fragment {
             } catch (IOException e) {
 
             }finally {
+                System.out.println("111111111111111111111111111111");
+                System.out.println(spotOriginal);
                 Spot spotParticipacao = SpotTools.runAll(currentPhotoPath);
                 System.out.println(spotParticipacao);
                 removeView();
                 getParentFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.frameFragment, new MapaFragment())
+                        .replace(R.id.frameFragment, new ParticipateChallengeFragment(spotOriginal,spotParticipacao))
                         .commit();
             }
         }

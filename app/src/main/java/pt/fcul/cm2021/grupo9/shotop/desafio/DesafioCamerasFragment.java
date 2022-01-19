@@ -24,6 +24,7 @@ import java.util.Date;
 import pt.fcul.cm2021.grupo9.shotop.MySpots.SpotInfoFragment;
 import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.camera.CameraFragment;
+import pt.fcul.cm2021.grupo9.shotop.comparator.ParticipateChallengeFragment;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
 import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
 import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.CheckPhotoFragment;
@@ -32,6 +33,7 @@ public class DesafioCamerasFragment extends Fragment {
 
     public Spot spotOriginal;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
+    boolean cam1 = true;
 
     Uri photoURI;
 
@@ -52,6 +54,7 @@ public class DesafioCamerasFragment extends Fragment {
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                cam1 = true;
                 dispatchTakePictureIntent();
             }
         });
@@ -61,6 +64,7 @@ public class DesafioCamerasFragment extends Fragment {
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                cam1 = false;
                 getParentFragmentManager()
                         .beginTransaction()
                         .replace(R.id.frameFragment, new CameraFragment(spotOriginal))
@@ -116,12 +120,13 @@ public class DesafioCamerasFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && cam1) {
+            System.out.println("222222222222222222222222222222222222222222222222");
             Spot spotParticipacao = SpotTools.runAll(currentPhotoPath);
             System.out.println(spotParticipacao);
             getParentFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.frameFragment, new MapaFragment())
+                    .replace(R.id.frameFragment, new ParticipateChallengeFragment(spotOriginal,spotParticipacao))
                     .commit();
         }
 

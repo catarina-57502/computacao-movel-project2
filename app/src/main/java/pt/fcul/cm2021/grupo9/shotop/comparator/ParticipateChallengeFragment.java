@@ -44,25 +44,20 @@ public class ParticipateChallengeFragment extends Fragment {
         this.newSpot = newSpot;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         view = inflater.inflate(R.layout.fragment_participate_challenge, container, false);
-        score = view.findViewById(R.id.Score);
+        if(ogSpot != null && newSpot != null){
+            score = view.findViewById(R.id.Score);
+            int result = (int) comparatorFragment.compareTwoSpots(ogSpot,newSpot);
+            System.out.println(result);
+            score.setText( result +"%");
+            desafio = new Desafio(newSpot.getImagem(),ogSpot.getId(), ogSpot.getIdUser(), newSpot.getIdUser(), Integer.toString(result));
+        }
 
-        //System.out.println(ogSpot.getDateTime()  + newSpot.getDateTime());
-        int result = (int) comparatorFragment.compareTwoSpots(ogSpot,newSpot);
-        score.setText( result +"%");
 
-        System.out.println("ISIHSUFSHUFHSUF" + ogSpot.getIdUser());
-        desafio = new Desafio(newSpot.getImagem(),ogSpot.getId(), ogSpot.getIdUser(), newSpot.getIdUser(), Integer.toString(result));
 
         Button btn = (Button) view.findViewById(R.id.submitEntry);
         btn.setOnClickListener(new View.OnClickListener() {
