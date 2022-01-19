@@ -44,10 +44,9 @@ public class AdapterFriendSpots extends RecyclerView.Adapter<AdapterFriendSpots.
                 LayoutInflater.from(parent.getContext()), parent, false),
                 position -> {
                     AppCompatActivity activity = (AppCompatActivity) context;
-                    SpotInfoFragment fragment = new SpotInfoFragment(spots.get(position));
                     activity.getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.frameFragment, fragment)
+                            .replace(R.id.frameFragment, new SpotInfoFragment(spots.get(position)))
                             .commit();
                 }
         );
