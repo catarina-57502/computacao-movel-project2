@@ -1,28 +1,52 @@
 package pt.fcul.cm2021.grupo9.shotop.login;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 import pt.fcul.cm2021.grupo9.shotop.R;
+import pt.fcul.cm2021.grupo9.shotop.adapters.AdapterSpot;
+import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
+import pt.fcul.cm2021.grupo9.shotop.entidades.User;
 import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
+import pt.fcul.cm2021.grupo9.shotop.main.MainActivity;
 
 public class RegisterFragment extends Fragment {
 
     private FirebaseAuth mAuth;
+    private FirebaseUser firebaseUser;
+
+    private String displayName;
+
+    private final CollectionReference user = MainActivity.db.collection("User");
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,10 +67,12 @@ public class RegisterFragment extends Fragment {
         Button register = view.findViewById(R.id.buttonRegistar);
         register.setOnClickListener(l -> {
 
+            EditText etName = view.findViewById(R.id.et_name);
             EditText etEmail = view.findViewById(R.id.et_email);
             EditText etPassword = view.findViewById(R.id.et_password);
             EditText etConfirmPassword = view.findViewById(R.id.et_password2);
 
+            displayName = etName.getText().toString();
             String email = etEmail.getText().toString();
             String password = etPassword.getText().toString();
             String confirmPassword = etConfirmPassword.getText().toString();
@@ -67,10 +93,13 @@ public class RegisterFragment extends Fragment {
         // [START create_user_with_email]
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(requireActivity(), task -> {
-                    if (task.isSuccessful()) {
+                    if(task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        updateUI(user);
+                        firebaseUser = mAuth.getCurrentUser();
+
+                        User newUser = new User(displayName, firebaseUser.getEmail());
+                        user.document(firebaseUser.getUid()).set(newUser);
+
                     } else {
                         try {
                             throw task.getException();
@@ -83,16 +112,16 @@ public class RegisterFragment extends Fragment {
                         } catch(Exception e) {
                             Toast.makeText(requireActivity(), "Unexpected error!", Toast.LENGTH_SHORT).show();
                         }
-                        // If sign in fails, display a message to the user.
-                        updateUI(null);
                     }
+                    // If sign in fails, display a message to the user.
+                    updateUI();
                 });
         // [END create_user_with_email]
     }
 
-    private void updateUI(FirebaseUser user) {
+    private void updateUI() {
 
-        if(user != null)
+        if(firebaseUser != null)
         {
             getParentFragmentManager()
                     .beginTransaction()

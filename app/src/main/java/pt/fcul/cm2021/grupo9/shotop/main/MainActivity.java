@@ -6,10 +6,14 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+
+import android.widget.Toast;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
 
 
 import androidx.annotation.NonNull;
@@ -25,7 +29,20 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import com.google.firebase.firestore.Query;
+
+
+import pt.fcul.cm2021.grupo9.shotop.community.AddFriendDialogFragment;
+import pt.fcul.cm2021.grupo9.shotop.MySpots.ListSpotsFragment;
+import pt.fcul.cm2021.grupo9.shotop.community.CommunityFragment;
+import pt.fcul.cm2021.grupo9.shotop.entidades.User;
+
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -39,13 +56,16 @@ import pt.fcul.cm2021.grupo9.shotop.camera.CameraFragment;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
 import pt.fcul.cm2021.grupo9.shotop.listeners.OnLocationChangedListener;
 import pt.fcul.cm2021.grupo9.shotop.location.FusedLocation;
+
 import pt.fcul.cm2021.grupo9.shotop.login.LoginFragment;
 import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
 import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.StartAddFragment;
 
 
-public class MainActivity extends AppCompatActivity   {
+
+public class MainActivity extends AppCompatActivity implements AddFriendDialogFragment.AddFriendDialogFragmentListener  {
+
 
     public static final String TAG_MAPS = "MAPS";
     public static final String TAG_LOGIN = "LOGIN";
@@ -118,9 +138,14 @@ public class MainActivity extends AppCompatActivity   {
                         .commit();
             }
 
-            if (id == R.id.community) {
 
-            }
+            if(id == R.id.community) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frameFragment, new CommunityFragment())
+                        .commit();
+
+           }
 
             if (id == R.id.CameraOverlay) {
                 getSupportFragmentManager()
@@ -175,6 +200,23 @@ public class MainActivity extends AppCompatActivity   {
             }
         }
     }
+
+
+    @Override
+    public void addFriend(String friend) {
+
+        Query query = db.collection("User").whereEqualTo("email", friend);
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                boolean friendExists = !task.getResult().isEmpty();
+
+                if(friendExists) {
+
+                    DocumentSnapshot fDocument = task.getResult().getDocuments().get(0);
+                    User friendUser = fDocument.toObject(User.class);
+
+                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                    DocumentReference docRef = db.collection("User").document(firebaseUser.getUid());
 
     public void getAllSpotsDB () {
         MainActivity.db.collection("Spot")
@@ -232,4 +274,15 @@ public class MainActivity extends AppCompatActivity   {
     }
 
 
+
+                    docRef.update("amigos", FieldValue.arrayUnion(friendUser));
+                }
+                else
+                    Toast.makeText(this, "User doesn't exist!", Toast.LENGTH_SHORT).show();
+
+            }  else {
+                Log.d("SHOTOP", "Error getting documents: ", task.getException());
+            }
+        });
+    }
 }

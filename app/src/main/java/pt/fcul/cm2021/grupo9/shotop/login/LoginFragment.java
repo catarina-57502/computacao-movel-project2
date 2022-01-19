@@ -2,6 +2,7 @@ package pt.fcul.cm2021.grupo9.shotop.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.facebook.AccessToken;
@@ -29,17 +29,20 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Arrays;
 
 import pt.fcul.cm2021.grupo9.shotop.R;
+import pt.fcul.cm2021.grupo9.shotop.entidades.User;
 import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
 import pt.fcul.cm2021.grupo9.shotop.main.MainActivity;
 
@@ -48,9 +51,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private static final int RC_SIGN_IN_GOOGLE = 1;
 
     private FirebaseAuth mAuth;
+    private FirebaseUser firebaseUser;
 
     private GoogleSignInClient mGoogleSignInClient;
     private CallbackManager mCallbackManager;
+
+    private final CollectionReference user = MainActivity.db.collection("User");
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,8 +111,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         super.onStart();
 
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
+        firebaseUser = mAuth.getCurrentUser();
+
+        updateUI();
     }
 
     private void loginWithEmailAndPassword() {
@@ -121,10 +128,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(requireActivity(), task -> {
-                        if (task.isSuccessful()) {
+                        if(task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            firebaseUser = mAuth.getCurrentUser();
+
+                            submit();
                         } else {
                             try {
                                 throw task.getException();
@@ -135,9 +143,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             } catch(Exception e) {
                                 Toast.makeText(requireActivity(), "Unexpected error!", Toast.LENGTH_SHORT).show();
                             }
-                            // If sign in fails, display a message to the user.
-                            updateUI(null);
                         }
+                        // If sign in fails, display a message to the user.
+                        updateUI();
                     });
         }
         else
@@ -174,14 +182,14 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(requireActivity(), task -> {
-
                     if(task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        updateUI(user);
-                    } else {
-                        updateUI(null);
+                        firebaseUser = mAuth.getCurrentUser();
+
+                        submit();
                     }
+                    // If sign in fails, display a message to the user.
+                    updateUI();
                 });
     }
 
@@ -195,18 +203,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(requireActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            updateUI(null);
-                        }
+                .addOnCompleteListener(requireActivity(), task -> {
+                    if(task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        firebaseUser = mAuth.getCurrentUser();
+
+                        submit();
                     }
+                    // If sign in fails, display a message to the user.
+                    updateUI();
                 });
     }
 
@@ -252,9 +257,29 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void updateUI(FirebaseUser user) {
+    private void submit() {
 
-        if(user != null)
+        DocumentReference docRef = user.document(firebaseUser.getUid());
+
+        docRef.get().addOnCompleteListener((OnCompleteListener<DocumentSnapshot>) task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d("SHOTOP", "DocumentSnapshot data: " + document.getData());
+                } else {
+                    Log.d("SHOTOP", "No such document");
+                    User newUser = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail());
+                    user.document(firebaseUser.getUid()).set(newUser);
+                }
+            } else {
+                Log.d("SHOTOP", "get failed with ", task.getException());
+            }
+        });
+    }
+
+    private void updateUI() {
+
+        if(firebaseUser != null)
         {
             getParentFragmentManager()
                     .beginTransaction()
