@@ -352,10 +352,34 @@ public class Spot {
     @Override
     public String toString() {
         return "Spot{" +
-                "nome='" + nome + '\'' +
+                "id='" + id + '\'' +
+                ", nome='" + nome + '\'' +
                 ", loc=" + loc +
+                ", imagem='" + imagem + '\'' +
+                ", caracteristicas=" + caracteristicas +
+                ", idUser='" + idUser + '\'' +
+                ", imageHeight='" + imageHeight + '\'' +
+                ", imageWidth='" + imageWidth + '\'' +
+                ", model='" + model + '\'' +
+                ", dateTime='" + dateTime + '\'' +
+                ", orientation='" + orientation + '\'' +
+                ", fNumber='" + fNumber + '\'' +
+                ", exposureTime='" + exposureTime + '\'' +
+                ", focalLength='" + focalLength + '\'' +
+                ", flash='" + flash + '\'' +
+                ", iSOSpeedRatings='" + iSOSpeedRatings + '\'' +
+                ", whiteBalanceMode='" + whiteBalanceMode + '\'' +
+                ", apertureValue='" + apertureValue + '\'' +
+                ", shutterSpeedValue='" + shutterSpeedValue + '\'' +
+                ", detectedFileTypeName='" + detectedFileTypeName + '\'' +
+                ", fileSize='" + fileSize + '\'' +
+                ", brightnessValue='" + brightnessValue + '\'' +
+                ", exposureBiasValue='" + exposureBiasValue + '\'' +
+                ", maxApertureValue='" + maxApertureValue + '\'' +
+                ", digitalZoomRatio='" + digitalZoomRatio + '\'' +
+                ", contrast='" + contrast + '\'' +
+                ", saturation='" + saturation + '\'' +
+                ", sharpness='" + sharpness + '\'' +
                 '}';
     }
-
-
 }

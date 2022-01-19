@@ -41,6 +41,8 @@ import java.util.List;
 import java.util.Locale;
 
 import pt.fcul.cm2021.grupo9.shotop.R;
+import pt.fcul.cm2021.grupo9.shotop.desafio.DesafioCamerasFragment;
+import pt.fcul.cm2021.grupo9.shotop.desafio.SpotTools;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
 import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
 import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.StartAddFragment;
@@ -73,14 +75,6 @@ public class CameraFragment extends Fragment {
         spotOriginal.setImageHeight("1920");
         spotOriginal.setImageWidth("1080");
 
-        String orient = spotOriginal.getOrientation();
-
-        if(orient.toLowerCase().contains(("right"))){
-            spotOriginal.setOrientation("Vertical");
-        }else{
-            spotOriginal.setOrientation("Horizontal");
-        }
-
         resolucao();
     }
 
@@ -100,7 +94,7 @@ public class CameraFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_camera, container, false);
         //Confirmar foto original
 
-        if(spotOriginal.getOrientation() == "Horizontal"){
+        if(spotOriginal.getOrientation().equals("Horizontal")){
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
 
@@ -130,6 +124,18 @@ public class CameraFragment extends Fragment {
     private static final String CAMERA_PARAM_PORTRAIT = "portrait";
 
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        c.stopPreview();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        c.stopPreview();
+    }
+
     public static Camera getCameraInstance(){
 
         try {
@@ -139,12 +145,13 @@ public class CameraFragment extends Fragment {
             Camera.Parameters param = c.getParameters();
             Log.i("camera", "parameters: " + param.flatten());
 
-            if (spotOriginal.getOrientation() == "Horizontal") {
-                c.setDisplayOrientation(0);
-                parameters.set(CAMERA_PARAM_ORIENTATION, CAMERA_PARAM_PORTRAIT);
-            } else {
-                c.setDisplayOrientation(90);
+            if (spotOriginal.getOrientation().equals("Horizontal")) {
+                c.setDisplayOrientation(360);
                 parameters.set(CAMERA_PARAM_ORIENTATION, CAMERA_PARAM_LANDSCAPE);
+            } else {
+               c.setDisplayOrientation(90);
+
+                parameters.set(CAMERA_PARAM_ORIENTATION, CAMERA_PARAM_PORTRAIT );
 
             }
             c.setParameters(parameters);
@@ -156,12 +163,16 @@ public class CameraFragment extends Fragment {
         return c;
     }
 
+
+    View viewControl;
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void addView() {
 
+
         LayoutInflater controlInflater = LayoutInflater.from(getContext());
-        View viewControl = controlInflater.inflate(R.layout.overlay, null);
-        
+        viewControl = controlInflater.inflate(R.layout.overlay, null);
+
 
         ImageView img = viewControl.findViewById(R.id.imageView1);
 
@@ -177,9 +188,19 @@ public class CameraFragment extends Fragment {
                 c.takePicture(null, null, mPicture);
             }
         });
+
         ViewGroup.LayoutParams layoutParamsControl = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         getActivity().addContentView(viewControl, layoutParamsControl);
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void removeView() {
+
+
+        viewControl.setVisibility(View.GONE);
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     int MEDIA_TYPE_IMAGE = 1;
@@ -209,7 +230,13 @@ public class CameraFragment extends Fragment {
             } catch (IOException e) {
 
             }finally {
-                //  mudar fragmento
+                Spot spotParticipacao = SpotTools.runAll(currentPhotoPath);
+                System.out.println(spotParticipacao);
+                removeView();
+                getParentFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frameFragment, new MapaFragment())
+                        .commit();
             }
         }
     };
