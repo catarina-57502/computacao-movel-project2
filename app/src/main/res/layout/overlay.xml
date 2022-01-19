@@ -6,12 +6,18 @@
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_centerInParent="true"
-        android:alpha=".70"
-        android:paddingRight="100dp"
-        android:src="@drawable/mm" />
+
+        android:alpha=".70" />
+
+    <Button
+        android:id="@+id/buttonPhoto"
+        android:layout_margin="20dp"
+        android:text="@string/foto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 
 

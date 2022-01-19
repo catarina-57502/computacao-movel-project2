@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".desafio.DesafioCamerasFragment">
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical"
+
+       >
+
+       <TextView
+           android:layout_marginTop="10dp"
+           android:textStyle="bold"
+           android:textColor="@color/black"
+           android:gravity="center"
+           android:layout_gravity="center"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:textSize="20dp"
+           android:layout_marginBottom="60dp"
+           android:text="@string/desafio" />
+
+       <TextView
+           android:gravity="center"
+           android:textSize="18sp"
+           android:layout_gravity="center"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:text="@string/cameraEscolha"
+           android:textColor="@color/black"/>
+
+       <Button
+           android:id="@+id/btnCamera1"
+           android:gravity="center"
+           android:layout_gravity="center"
+           android:layout_marginTop="50dp"
+           android:layout_marginBottom="10dp"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="@string/btnCamera1"/>
+       <Button
+           android:id="@+id/btnCamera2"
+           android:gravity="center"
+           android:layout_gravity="center"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="@string/btnCamera2"/>
+
+   </LinearLayout>
+
+
+
+</FrameLayout>

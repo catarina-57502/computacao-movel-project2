@@ -16,7 +16,8 @@ public class Spot {
     GeoPoint loc;
     String imagem;
     List<String> caracteristicas;
-
+    String idUser;
+    boolean desafio;
     String imageHeight;
     String imageWidth;
     String model;
@@ -68,6 +69,62 @@ public class Spot {
         this.contrast = contrast;
         this.saturation = saturation;
         this.sharpness = sharpness;
+    }
+
+    public Spot(String id, String nome, GeoPoint loc, String imagem, List<String> caracteristicas, String idUser, boolean desafio, String imageHeight, String imageWidth, String model, String dateTime, String orientation, String fNumber, String exposureTime, String focalLength, String flash, String iSOSpeedRatings, String whiteBalanceMode, String apertureValue, String shutterSpeedValue, String detectedFileTypeName, String fileSize, String brightnessValue, String exposureBiasValue, String maxApertureValue, String digitalZoomRatio, String contrast, String saturation, String sharpness) {
+        this.id = id;
+        this.nome = nome;
+        this.loc = loc;
+        this.imagem = imagem;
+        this.caracteristicas = caracteristicas;
+        this.idUser = idUser;
+        this.desafio = desafio;
+        this.imageHeight = imageHeight;
+        this.imageWidth = imageWidth;
+        this.model = model;
+        this.dateTime = dateTime;
+        this.orientation = orientation;
+        this.fNumber = fNumber;
+        this.exposureTime = exposureTime;
+        this.focalLength = focalLength;
+        this.flash = flash;
+        this.iSOSpeedRatings = iSOSpeedRatings;
+        this.whiteBalanceMode = whiteBalanceMode;
+        this.apertureValue = apertureValue;
+        this.shutterSpeedValue = shutterSpeedValue;
+        this.detectedFileTypeName = detectedFileTypeName;
+        this.fileSize = fileSize;
+        this.brightnessValue = brightnessValue;
+        this.exposureBiasValue = exposureBiasValue;
+        this.maxApertureValue = maxApertureValue;
+        this.digitalZoomRatio = digitalZoomRatio;
+        this.contrast = contrast;
+        this.saturation = saturation;
+        this.sharpness = sharpness;
+    }
+
+    public boolean isDesafio() {
+        return desafio;
+    }
+
+    public void setDesafio(boolean desafio) {
+        this.desafio = desafio;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
     }
 
     public String getImagem() {
@@ -295,10 +352,34 @@ public class Spot {
     @Override
     public String toString() {
         return "Spot{" +
-                "nome='" + nome + '\'' +
+                "id='" + id + '\'' +
+                ", nome='" + nome + '\'' +
                 ", loc=" + loc +
+                ", imagem='" + imagem + '\'' +
+                ", caracteristicas=" + caracteristicas +
+                ", idUser='" + idUser + '\'' +
+                ", imageHeight='" + imageHeight + '\'' +
+                ", imageWidth='" + imageWidth + '\'' +
+                ", model='" + model + '\'' +
+                ", dateTime='" + dateTime + '\'' +
+                ", orientation='" + orientation + '\'' +
+                ", fNumber='" + fNumber + '\'' +
+                ", exposureTime='" + exposureTime + '\'' +
+                ", focalLength='" + focalLength + '\'' +
+                ", flash='" + flash + '\'' +
+                ", iSOSpeedRatings='" + iSOSpeedRatings + '\'' +
+                ", whiteBalanceMode='" + whiteBalanceMode + '\'' +
+                ", apertureValue='" + apertureValue + '\'' +
+                ", shutterSpeedValue='" + shutterSpeedValue + '\'' +
+                ", detectedFileTypeName='" + detectedFileTypeName + '\'' +
+                ", fileSize='" + fileSize + '\'' +
+                ", brightnessValue='" + brightnessValue + '\'' +
+                ", exposureBiasValue='" + exposureBiasValue + '\'' +
+                ", maxApertureValue='" + maxApertureValue + '\'' +
+                ", digitalZoomRatio='" + digitalZoomRatio + '\'' +
+                ", contrast='" + contrast + '\'' +
+                ", saturation='" + saturation + '\'' +
+                ", sharpness='" + sharpness + '\'' +
                 '}';
     }
-
-
 }

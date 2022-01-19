@@ -73,7 +73,7 @@ public class StartAddFragment extends Fragment  {
                 nomeFoto = etNomeFoto.getText().toString();
 
                 if(nomeFoto.isEmpty()){
-                    Toast.makeText(requireActivity(), "Nome vazio!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Nome vazio!", Toast.LENGTH_SHORT).show();
                 }else {
                     dispatchTakePictureIntent();
                 }
@@ -168,7 +168,6 @@ public class StartAddFragment extends Fragment  {
                     .replace(R.id.frameFragment, new CheckPhotoFragment(bitmap,currentPhotoPath,spot))
                     .commit();
         }
-
 
     }
 }

@@ -5,6 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".processoAdicionar.CheckPhotoFragment">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,6 +23,32 @@
             android:id="@+id/photoview"
             android:layout_width="350dp"
             android:layout_height="350dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="@string/selecione"/>
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:id="@+id/radioG"
+            android:orientation="horizontal">
+            <RadioButton android:id="@+id/radio_V"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:checked="true"
+                android:text="@string/vertical" />
+            <RadioButton android:id="@+id/radio_H"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/hori" />
+        </RadioGroup>
 
         <Button
             android:id="@+id/repetirBtn"
@@ -42,5 +72,7 @@
 
 
     </LinearLayout>
+
+    </ScrollView>
 
 </FrameLayout>

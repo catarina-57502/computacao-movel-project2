@@ -40,4 +40,15 @@
     <string name="continuar">Confirmar</string>
     <string name="submeter">Submeter</string>
     <string name="MySpots">Meus Spots</string>
+    <string name="foto">Tirar Foto!</string>
+    <string name="participar">Participar No Desafio</string>
+    <string name="cameraEscolha">Escolha que processo deseja seguir:</string>
+    <string name="desafio">DESAFIO</string>
+    <string name="btnCamera1">Camera Default</string>
+    <string name="btnCamera2">Sobrepor a imagem</string>
+    <string name="criar_desafio">Criar desafio</string>
+    <string name="desafio_criado">Desafio a decorrer</string>
+    <string name="vertical">Vertical</string>
+    <string name="hori">Horizontal</string>
+    <string name="selecione">Selecione a orientação da sua foto:</string>
 </resources>

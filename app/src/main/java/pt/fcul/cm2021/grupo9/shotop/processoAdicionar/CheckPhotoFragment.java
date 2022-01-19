@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
@@ -27,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 
 import pt.fcul.cm2021.grupo9.shotop.R;
+import pt.fcul.cm2021.grupo9.shotop.camera.BitmapTools;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
 
 
@@ -35,6 +38,11 @@ public class CheckPhotoFragment extends Fragment {
     Bitmap bitmap;
     String currentPhotoPath;
     Spot spot;
+    String orientationRadio = "Vertical";
+
+    CheckPhotoFragment(){
+
+    }
 
     CheckPhotoFragment(Bitmap bm, String currentPhotoPath, Spot spot){
         this.bitmap = bm;
@@ -46,8 +54,10 @@ public class CheckPhotoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_check_photo, container, false);
         ImageView imgView = v.findViewById(R.id.photoview);
-        setPic(imgView);
+
         getDados();
+        setPic(imgView);
+
 
         Button btn = (Button) v.findViewById(R.id.repetirBtn);
 
@@ -68,11 +78,29 @@ public class CheckPhotoFragment extends Fragment {
             public void onClick(View view) {
                 ProgressBar progressBar = v.findViewById(R.id.progress_loader);
                 progressBar.setVisibility(View.VISIBLE);
+
+                spot.setOrientation(orientationRadio);
+
                 getParentFragmentManager()
                         .beginTransaction()
                         .replace(R.id.frameFragment, new VisionPhotoFragment(bitmap,spot))
                         .commit();
             }
+        });
+
+        RadioGroup rb = (RadioGroup) v.findViewById(R.id.radioG);
+        rb.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.radio_V:
+                        orientationRadio = "Vertical";
+                        break;
+                    case R.id.radio_H:
+                        orientationRadio = "Horizontal";
+                        break;
+                }
+            }
+
         });
 
         final View view = v.findViewById(R.id.circle_two);
@@ -81,15 +109,23 @@ public class CheckPhotoFragment extends Fragment {
         return v;
     }
 
+
+
+
     public void getDados(){
         if(StartAddFragment.currentPhotoPath != null){
             String selectedImagePath = StartAddFragment.currentPhotoPath;;
-            System.out.println("PATH = " + selectedImagePath);
             try {
                 File jpegFile = new File(selectedImagePath);
                 Metadata metadata = ImageMetadataReader.readMetadata(jpegFile);
+
+
+
                 for (Directory directory : metadata.getDirectories()) {
                     for (Tag tag : directory.getTags()) {
+                        System.out.println(tag.getTagName());
+                        System.out.println(tag.getDescription());
+
                         checkCategoria(tag.getTagName(),tag.getDescription());
                     }
                 }
@@ -102,11 +138,13 @@ public class CheckPhotoFragment extends Fragment {
     }
 
     public void checkCategoria(String ctg, String value){
+        int number = 1;
+        int number2 = 0;
         switch (ctg){
-            case "Image Height":
+            case "Exif Image Height":
                 spot.setImageHeight(value);
                 break;
-            case "Image Width":
+            case "Exif Image Width":
                 spot.setImageWidth(value);
                 break;
             case "Model":
@@ -169,9 +207,7 @@ public class CheckPhotoFragment extends Fragment {
             case "Sharpness":
                 spot.setSharpness(value);
                 break;
-
         }
-
     }
 
     private void setPic(ImageView imgV) {
@@ -192,6 +228,14 @@ public class CheckPhotoFragment extends Fragment {
 
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+        if(spot.getOrientation().toLowerCase().contains(("right"))){
+            bitmap = BitmapTools.rotate(bitmap,90);
+        }else{
+            bitmap = BitmapTools.rotate(bitmap,0);
+        }
+
+
         bitmap.compress(Bitmap.CompressFormat.JPEG, 65, stream);
         byte[] byteArray = stream.toByteArray();
         spot.setImagem(byteArray);
