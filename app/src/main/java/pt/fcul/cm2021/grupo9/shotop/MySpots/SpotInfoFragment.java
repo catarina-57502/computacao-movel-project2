@@ -3,6 +3,8 @@ package pt.fcul.cm2021.grupo9.shotop.MySpots;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,7 +16,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
+import java.util.Locale;
 
 import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.desafio.DesafioCamerasFragment;
@@ -69,7 +74,16 @@ public class SpotInfoFragment extends Fragment {
         if (spot.getLoc() == null) {
             t2.setText("N/A");
         } else {
-            t2.setText(spot.getLoc().toString());
+            Geocoder geocoder;
+            List<Address> addresses;
+            geocoder = new Geocoder(getActivity(), Locale.getDefault());
+
+            try {
+                addresses = geocoder.getFromLocation(spot.getLoc().getLatitude(), spot.getLoc().getLongitude(), 1);
+                t2.setText(addresses.get(0).getAddressLine(0));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         TextView t3 = v.findViewById(R.id.caracSpot);
