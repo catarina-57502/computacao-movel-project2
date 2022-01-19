@@ -124,6 +124,18 @@ public class CameraFragment extends Fragment {
     private static final String CAMERA_PARAM_PORTRAIT = "portrait";
 
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        c.stopPreview();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        c.stopPreview();
+    }
+
     public static Camera getCameraInstance(){
 
         try {
@@ -133,10 +145,11 @@ public class CameraFragment extends Fragment {
             Camera.Parameters param = c.getParameters();
             Log.i("camera", "parameters: " + param.flatten());
 
-            if (spotOriginal.getOrientation() == "Horizontal") {
-
+            if (spotOriginal.getOrientation().equals("Horizontal")) {
+                c.setDisplayOrientation(360);
                 parameters.set(CAMERA_PARAM_ORIENTATION, CAMERA_PARAM_LANDSCAPE);
             } else {
+               c.setDisplayOrientation(90);
 
                 parameters.set(CAMERA_PARAM_ORIENTATION, CAMERA_PARAM_PORTRAIT );
 
