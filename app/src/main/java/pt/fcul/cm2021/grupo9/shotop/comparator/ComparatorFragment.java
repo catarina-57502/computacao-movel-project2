@@ -58,11 +58,11 @@ public class ComparatorFragment{
         return intersect.size() * 30.0 /ogPhotoCaracteristicas.size(); //assumindo ogPhoto.caracteristicas.size !=0
     }
 
-    private double compareMetadados(Spot ogPhoto, Spot newPhoto){ //50 /15 params
+    private double compareMetadados(Spot ogPhoto, Spot newPhoto){ //50 /14 params
         double maxScore = 50.00;
         double result = 0;
-        double onePerfectScore = maxScore/15.00;
-        double oneHalfScore = 0.5 * maxScore/15.00;
+        double onePerfectScore = maxScore/14.00;
+        double oneHalfScore = 0.5 * maxScore/14.00;
 
 
         if (ogPhoto.getApertureValue() == null && newPhoto.getApertureValue()== null){
@@ -188,14 +188,6 @@ public class ComparatorFragment{
                 result += oneHalfScore;
             }
         }
-
-        if((ogPhoto.getOrientation()== null && newPhoto.getOrientation()== null ) ){
-            result +=onePerfectScore;
-        }else if(ogPhoto.getOrientation()!= null && newPhoto.getOrientation()!= null &&
-                (newPhoto.getOrientation().compareTo(ogPhoto.getOrientation()) == 0)) {
-            result += onePerfectScore;
-        }
-
 
         if((ogPhoto.getSaturation()== null && newPhoto.getSaturation()== null ) ){
             result +=onePerfectScore;
