@@ -343,13 +343,16 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
                                 String shutterSpeedValue = (String) document.getData().get("shutterSpeedValue");
                                 String whiteBalanceMode = (String) document.getData().get("whiteBalanceMode");
                                 ArrayList<String> caracteristicas = (ArrayList<String>) document.getData().get("caracteristicas");
+                                String idUser = (String) document.getData().get("idUser");
+                                boolean desafio = (boolean) document.getData().get("desafio");
+
                                 Spot sp = new Spot(
-                                        id, nome, loc, imagem, caracteristicas,
-                                        imageHeight, imageWidth, model, dateTime,
-                                        orientation, fNumber, exposureTime, focalLength,
-                                        flash, iSOSpeedRatings, whiteBalanceMode, apertureValue,
-                                        shutterSpeedValue, detectedFileTypeName, fileSize, brightnessValue,
-                                        exposureBiasValue, maxApertureValue, digitalZoomRatio, contrast, saturation, sharpness
+                                        id,nome,loc,imagem,caracteristicas,idUser,
+                                        desafio, imageHeight,imageWidth,model,dateTime,
+                                        orientation,fNumber,exposureTime,focalLength,
+                                        flash,iSOSpeedRatings,whiteBalanceMode,apertureValue,
+                                        shutterSpeedValue,detectedFileTypeName,fileSize,brightnessValue,
+                                        exposureBiasValue,maxApertureValue,digitalZoomRatio,contrast,saturation,sharpness
                                 );
                                 allSpots.add(sp);
                             }

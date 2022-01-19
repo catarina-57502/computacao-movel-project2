@@ -38,6 +38,11 @@ public class SpotInfoFragment extends Fragment {
 
         Button btn = (Button) v.findViewById(R.id.butDesafio);
 
+        if(!spot.isDesafio()){
+            btn.setText("Sem desafio ativo...");
+            btn.setEnabled(false);
+        }
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
