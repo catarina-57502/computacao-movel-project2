@@ -305,13 +305,13 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialogFr
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            List<DocumentSnapshot> ds = task.getResult().getDocuments();
-                            for(DocumentSnapshot d: ds){
-                                User u = d.toObject(User.class);
-                                u.setIdNoBD(d.getId());
-                                users.add(u);
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String id = document.getId();
+                                String nome = (String) document.getData().get("nome");
+                                String email = (String) document.getData().get("email");
+                                User user = new User(id,nome,email);
+                                users.add(user);
                             }
-
                         } else {
                             Log.d("TAG", "Error getting documents: ", task.getException());
                         }
