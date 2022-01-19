@@ -61,7 +61,7 @@ import pt.fcul.cm2021.grupo9.shotop.login.LoginFragment;
 import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
 import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.StartAddFragment;
-
+import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.VisionPhotoFragment;
 
 
 public class MainActivity extends AppCompatActivity implements AddFriendDialogFragment.AddFriendDialogFragmentListener  {
@@ -219,6 +219,11 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialogFr
                     DocumentReference docRef = db.collection("User").document(firebaseUser.getUid());
 
                     docRef.update("amigos", FieldValue.arrayUnion(friendUser));
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.frameFragment, new CommunityFragment())
+                            .commit();
+
                 }
                 else
                     Toast.makeText(this, "User doesn't exist!", Toast.LENGTH_SHORT).show();
