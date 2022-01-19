@@ -41,6 +41,15 @@ public class Spot {
     String saturation;
     String sharpness;
 
+    public Spot() {
+
+    }
+
+    public Spot(String nome, String imagem) {
+        this.nome = nome;
+        this.imagem = imagem;
+    }
+
     public Spot(String id, String nome, GeoPoint loc, String imagem, List<String> caracteristicas, String imageHeight, String imageWidth, String model, String dateTime, String orientation, String fNumber, String exposureTime, String focalLength, String flash, String iSOSpeedRatings, String whiteBalanceMode, String apertureValue, String shutterSpeedValue, String detectedFileTypeName, String fileSize, String brightnessValue, String exposureBiasValue, String maxApertureValue, String digitalZoomRatio, String contrast, String saturation, String sharpness) {
         this.id = id;
         this.nome = nome;

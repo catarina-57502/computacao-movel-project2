@@ -61,7 +61,7 @@ import pt.fcul.cm2021.grupo9.shotop.login.LoginFragment;
 import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
 import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.StartAddFragment;
-
+import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.VisionPhotoFragment;
 
 
 public class MainActivity extends AppCompatActivity implements AddFriendDialogFragment.AddFriendDialogFragmentListener  {
@@ -218,7 +218,24 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialogFr
                     FirebaseUser firebaseUser = mAuth.getCurrentUser();
                     DocumentReference docRef = db.collection("User").document(firebaseUser.getUid());
 
-    public void getAllSpotsDB () {
+                    docRef.update("amigos", FieldValue.arrayUnion(friendUser));
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.frameFragment, new CommunityFragment())
+                            .commit();
+
+                }
+                else
+                    Toast.makeText(this, "User doesn't exist!", Toast.LENGTH_SHORT).show();
+
+            }  else {
+                Log.d("SHOTOP", "Error getting documents: ", task.getException());
+            }
+        });
+    }
+
+
+    public void getAllSpotsDB() {
         MainActivity.db.collection("Spot")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -271,18 +288,5 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialogFr
                         }
                     }
                 });
-    }
-
-
-
-                    docRef.update("amigos", FieldValue.arrayUnion(friendUser));
-                }
-                else
-                    Toast.makeText(this, "User doesn't exist!", Toast.LENGTH_SHORT).show();
-
-            }  else {
-                Log.d("SHOTOP", "Error getting documents: ", task.getException());
-            }
-        });
     }
 }
