@@ -218,6 +218,18 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialogFr
                     FirebaseUser firebaseUser = mAuth.getCurrentUser();
                     DocumentReference docRef = db.collection("User").document(firebaseUser.getUid());
 
+                    docRef.update("amigos", FieldValue.arrayUnion(friendUser));
+                }
+                else
+                    Toast.makeText(this, "User doesn't exist!", Toast.LENGTH_SHORT).show();
+
+            }  else {
+                Log.d("SHOTOP", "Error getting documents: ", task.getException());
+            }
+        });
+    }
+
+
     public void getAllSpotsDB () {
         MainActivity.db.collection("Spot")
                 .get()
@@ -275,14 +287,5 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialogFr
 
 
 
-                    docRef.update("amigos", FieldValue.arrayUnion(friendUser));
-                }
-                else
-                    Toast.makeText(this, "User doesn't exist!", Toast.LENGTH_SHORT).show();
 
-            }  else {
-                Log.d("SHOTOP", "Error getting documents: ", task.getException());
-            }
-        });
-    }
 }
