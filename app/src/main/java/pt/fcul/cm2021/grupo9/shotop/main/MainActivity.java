@@ -237,6 +237,7 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialogFr
     }
 
 
+
     public void getAllSpotsDB () {
         MainActivity.db.collection("Spot")
                 .get()
@@ -291,6 +292,8 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialogFr
                     }
                 });
     }
+}
+
 
     public void getAllUsersDB () {
         users = new ArrayList<>();
@@ -323,7 +326,6 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialogFr
         return new User("id","NA","NA");
     }
 }
-
 
 
 

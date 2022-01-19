@@ -50,7 +50,7 @@ public class CommunityFragment extends Fragment  {
                     Log.d("SHOTOP", "DocumentSnapshot data: " + document.getData());
                     currentUser = document.toObject(User.class);
 
-                    adapterUser = new AdapterUser();
+                    adapterUser = new AdapterUser(requireActivity());
                     adapterUser.setUsers(currentUser.getAmigos());
 
                     binding.rvCommunity.setAdapter(adapterUser);
