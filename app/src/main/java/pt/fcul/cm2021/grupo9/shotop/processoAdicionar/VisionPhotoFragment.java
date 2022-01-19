@@ -156,6 +156,7 @@ public class VisionPhotoFragment extends Fragment {
                 listaCarac.add(vr.description);
             }
             spot.setCaracteristicas(listaCarac);
+            spot.setDesafio(false);
             AdapterListCheckBox adapter = new AdapterListCheckBox(listVR,getContext());
             lv.setAdapter(adapter);
         } catch (InterruptedException e) {

@@ -87,9 +87,11 @@ public class ListSpotsFragment extends Fragment {
                                 String whiteBalanceMode = (String) document.getData().get("whiteBalanceMode");
                                 ArrayList<String> caracteristicas = (ArrayList<String>) document.getData().get("caracteristicas");
                                 String idUser = (String) document.getData().get("idUser");
+                                boolean desafio = (boolean) document.getData().get("desafio");
+
                                 Spot sp = new Spot(
                                         id,nome,loc,imagem,caracteristicas,idUser,
-                                        imageHeight,imageWidth,model,dateTime,
+                                        desafio, imageHeight,imageWidth,model,dateTime,
                                         orientation,fNumber,exposureTime,focalLength,
                                         flash,iSOSpeedRatings,whiteBalanceMode,apertureValue,
                                         shutterSpeedValue,detectedFileTypeName,fileSize,brightnessValue,

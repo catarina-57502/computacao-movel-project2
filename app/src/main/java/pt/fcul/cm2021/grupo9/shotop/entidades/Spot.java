@@ -17,7 +17,7 @@ public class Spot {
     String imagem;
     List<String> caracteristicas;
     String idUser;
-    boolean desafio = false;
+    boolean desafio;
     String imageHeight;
     String imageWidth;
     String model;
@@ -71,13 +71,14 @@ public class Spot {
         this.sharpness = sharpness;
     }
 
-    public Spot(String id, String nome, GeoPoint loc, String imagem, List<String> caracteristicas, String idUser, String imageHeight, String imageWidth, String model, String dateTime, String orientation, String fNumber, String exposureTime, String focalLength, String flash, String iSOSpeedRatings, String whiteBalanceMode, String apertureValue, String shutterSpeedValue, String detectedFileTypeName, String fileSize, String brightnessValue, String exposureBiasValue, String maxApertureValue, String digitalZoomRatio, String contrast, String saturation, String sharpness) {
+    public Spot(String id, String nome, GeoPoint loc, String imagem, List<String> caracteristicas, String idUser, boolean desafio, String imageHeight, String imageWidth, String model, String dateTime, String orientation, String fNumber, String exposureTime, String focalLength, String flash, String iSOSpeedRatings, String whiteBalanceMode, String apertureValue, String shutterSpeedValue, String detectedFileTypeName, String fileSize, String brightnessValue, String exposureBiasValue, String maxApertureValue, String digitalZoomRatio, String contrast, String saturation, String sharpness) {
         this.id = id;
         this.nome = nome;
         this.loc = loc;
         this.imagem = imagem;
         this.caracteristicas = caracteristicas;
         this.idUser = idUser;
+        this.desafio = desafio;
         this.imageHeight = imageHeight;
         this.imageWidth = imageWidth;
         this.model = model;
