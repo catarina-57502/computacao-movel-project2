@@ -1,5 +1,6 @@
 package pt.fcul.cm2021.grupo9.shotop.MySpots;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,37 +8,67 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
 
+import okqapps.com.tagslayout.TagItem;
+import okqapps.com.tagslayout.TagTextSize;
+import okqapps.com.tagslayout.TagsLayout;
 import pt.fcul.cm2021.grupo9.shotop.R;
+import pt.fcul.cm2021.grupo9.shotop.adapters.AdapterDesafio;
+import pt.fcul.cm2021.grupo9.shotop.adapters.AdapterListCheckBox;
+import pt.fcul.cm2021.grupo9.shotop.adapters.AdapterSpot;
+import pt.fcul.cm2021.grupo9.shotop.comparator.Desafio;
 import pt.fcul.cm2021.grupo9.shotop.desafio.DesafioCamerasFragment;
+import pt.fcul.cm2021.grupo9.shotop.desafio.SpotInfoCriarDesafioFragment;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
+import pt.fcul.cm2021.grupo9.shotop.main.MainActivity;
 import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.StartAddFragment;
 
 public class SpotInfoFragment extends Fragment {
 
     Spot spot;
+    ArrayList<Desafio> spotsDesafio = new ArrayList<>();
+    ListView lisDesafios;
 
     public SpotInfoFragment(Spot spot) {
         this.spot = spot;
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View v = inflater.inflate(R.layout.fragment_spot_info, container, false);
+
+
+        lisDesafios = v.findViewById(R.id.listDesafiosInfo);
+        AdapterDesafio adapter = new AdapterDesafio(spotsDesafio,getContext());
+        lisDesafios.setAdapter(adapter);
+
+
 
         ImageView imgView = v.findViewById(R.id.photoSpot);
 
@@ -57,6 +88,8 @@ public class SpotInfoFragment extends Fragment {
                         .commit();
             }
         });
+
+        getDesafiosDB();
 
         if (spot.getImagem() != null) {
 
@@ -91,11 +124,18 @@ public class SpotInfoFragment extends Fragment {
             }
         }
 
-        TextView t3 = v.findViewById(R.id.caracSpot);
-        if (spot.getCaracteristicas() == null) {
-            t3.setText("N/A");
-        } else {
-            t3.setText(spot.getCaracteristicas().toString());
+        TagsLayout t3 = v.findViewById(R.id.caracSpot);
+        if (spot.getCaracteristicas() != null) {
+            List<TagItem> tagItems = new ArrayList<>();
+            int i = 1;
+            for(String c: spot.getCaracteristicas()){
+                tagItems.add(new TagItem(i, c, getResources().getString(R.color.blue), getResources().getString(R.color.white), true));
+                i++;
+            }
+            t3.setViewMode(true);
+            t3.setTagTextSize(TagTextSize.SMALL);
+            t3.initializeTags(getActivity(), tagItems);
+
         }
 
         TextView t4 = v.findViewById(R.id.imageHeightSpot);
@@ -254,5 +294,40 @@ public class SpotInfoFragment extends Fragment {
 
 
         return v;
+    }
+
+    public void getDesafiosDB(){
+
+        MainActivity.db.collection("Desafio")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        spotsDesafio = new ArrayList<>();
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String id = document.getId();
+                                String fotoParticipacao = (String) document.getData().get("fotoParticipacao");
+                                String idSpot = (String) document.getData().get("idSpot");
+                                String idUserOriginal = (String) document.getData().get("idUserOriginal");
+                                String idUserParticipante = (String) document.getData().get("idUserParticipante");
+                                String score = (String) document.getData().get("score");
+                                Desafio ds = new Desafio(fotoParticipacao,idSpot,idUserOriginal,idUserParticipante,score);
+                                System.out.println("desafio");
+                                System.out.println(idSpot);
+                                System.out.println(spot.getId());
+                                if(ds.getIdSpot().equals(spot.getId())){
+                                    System.out.println("entrei");
+                                    spotsDesafio.add(ds);
+                                }
+
+                            }
+                            AdapterDesafio adapter = new AdapterDesafio(spotsDesafio,getContext());
+                            lisDesafios.setAdapter(adapter);
+                        } else {
+                            Log.d("TAG", "Error getting documents: ", task.getException());
+                        }
+                    }});
+
     }
 }

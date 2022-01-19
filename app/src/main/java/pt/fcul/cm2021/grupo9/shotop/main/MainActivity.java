@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialogFr
     private FirebaseAuth mAuth;
     public static final FirebaseFirestore db = FirebaseFirestore.getInstance();
     public static ArrayList<Spot> spots = new ArrayList<Spot>();
+    public static ArrayList<User> users = new ArrayList<>();
 
 
     public static Spot spotOriginal;
@@ -111,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialogFr
                     .commit();
         }
         getAllSpotsDB();
+        getAllUsersDB();
 
     }
 
@@ -235,7 +237,8 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialogFr
     }
 
 
-    public void getAllSpotsDB() {
+
+    public void getAllSpotsDB () {
         MainActivity.db.collection("Spot")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -290,3 +293,40 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialogFr
                 });
     }
 }
+
+
+    public void getAllUsersDB () {
+        users = new ArrayList<>();
+        MainActivity.db.collection("User")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String id = document.getId();
+                                String nome = (String) document.getData().get("nome");
+                                String email = (String) document.getData().get("email");
+                                User user = new User(id,nome,email);
+                                users.add(user);
+                            }
+                        } else {
+                            Log.d("TAG", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
+
+    public static User getUserFromID(String id) {
+        for (User us : users) {
+            if (us.getIdNoBD().equals(id)) {
+                return us;
+            }
+        }
+        return new User("id","NA","NA");
+    }
+}
+
+
+
+

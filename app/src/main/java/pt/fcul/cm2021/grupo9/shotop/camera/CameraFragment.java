@@ -207,8 +207,8 @@ public class CameraFragment extends Fragment {
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+            removeView();
             File pictureFile = null;
             try {
                 pictureFile = createImageFile();
@@ -238,7 +238,8 @@ public class CameraFragment extends Fragment {
 
                 MainActivity.spotParticipacao = spotParticipacao;
 
-                removeView();
+
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
                 getParentFragmentManager()
                         .beginTransaction()

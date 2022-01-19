@@ -39,6 +39,7 @@ public class ListSpotsFragment extends Fragment {
     View v;
     FirebaseUser firebaseUser;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v =  inflater.inflate(R.layout.fragment_list_spots, container, false);
@@ -46,6 +47,7 @@ public class ListSpotsFragment extends Fragment {
         if(firebaseUser != null) {
             getMySpotsDB();
         }
+
         return v;
     }
 

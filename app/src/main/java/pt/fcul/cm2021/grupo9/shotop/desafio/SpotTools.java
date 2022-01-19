@@ -70,7 +70,7 @@ public class SpotTools {
         bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos);
 
 
         getDados();

@@ -31,8 +31,6 @@ public class ComparatorFragment{
 
 
     private double compareDateTime(Spot ogPhoto, Spot newPhoto){ //20
-        System.out.println("44444444444444444444444444444");
-        System.out.println(ogPhoto.getDateTime());
         LocalDateTime ogPhotoDateTime = LocalDateTime.parse(ogPhoto.getDateTime(),formatter);
         LocalDateTime newPhotoDateTime = LocalDateTime.parse(newPhoto.getDateTime(),formatter);
         double result = 0;
@@ -52,17 +50,17 @@ public class ComparatorFragment{
         return result;
     }
 
-    private double compareCaracteristicas(Spot ogPhoto, Spot newPhoto) { //30
+    private double compareCaracteristicas(Spot ogPhoto, Spot newPhoto) { //50
         ArrayList<String> ogPhotoCaracteristicas  = (ArrayList<String>) ogPhoto.getCaracteristicas();
         ArrayList<String> newPhotoCaracteristicas  = (ArrayList<String>) newPhoto.getCaracteristicas();
 
         Set<String> intersect = new HashSet<String>(ogPhotoCaracteristicas);
         intersect.retainAll(newPhotoCaracteristicas);
-        return intersect.size() * 30.0 /ogPhotoCaracteristicas.size(); //assumindo ogPhoto.caracteristicas.size !=0
+        return intersect.size() * 50.0 /ogPhotoCaracteristicas.size(); //assumindo ogPhoto.caracteristicas.size !=0
     }
 
-    private double compareMetadados(Spot ogPhoto, Spot newPhoto){ //50 /14 params
-        double maxScore = 50.00;
+    private double compareMetadados(Spot ogPhoto, Spot newPhoto){ //30 /14 params
+        double maxScore = 30.00;
         double result = 0;
         double onePerfectScore = maxScore/14.00;
         double oneHalfScore = 0.5 * maxScore/14.00;
@@ -129,8 +127,8 @@ public class ComparatorFragment{
         if (ogPhoto.getExposureTime()==null && newPhoto.getExposureTime()==null){
             result +=onePerfectScore;
         }else if(ogPhoto.getExposureTime()!=null && newPhoto.getExposureTime()!=null){
-            String[] ogEpt = ogPhoto.getExposureTime().split(" ");
-            String[] newEpt = newPhoto.getExposureTime().split(" ");
+            String[] ogEpt = ogPhoto.getExposureTime().split("/");
+            String[] newEpt = newPhoto.getExposureTime().split("/");
             double ogEptt = Double.parseDouble(ogEpt[0]);
             double newEptt = Double.parseDouble(newEpt[0]);
 
