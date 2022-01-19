@@ -68,6 +68,7 @@ dependencies {
 
     implementation 'com.facebook.android:facebook-android-sdk:latest.release'
 
+    implementation 'com.okqapps.tagslayout:tags-layout:1.0.3'
 
     testImplementation 'junit:junit:'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

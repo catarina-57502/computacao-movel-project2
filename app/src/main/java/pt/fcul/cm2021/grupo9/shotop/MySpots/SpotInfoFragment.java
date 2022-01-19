@@ -1,5 +1,6 @@
 package pt.fcul.cm2021.grupo9.shotop.MySpots;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +9,7 @@ import android.location.Geocoder;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -32,6 +34,9 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
 
+import okqapps.com.tagslayout.TagItem;
+import okqapps.com.tagslayout.TagTextSize;
+import okqapps.com.tagslayout.TagsLayout;
 import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.adapters.AdapterDesafio;
 import pt.fcul.cm2021.grupo9.shotop.adapters.AdapterListCheckBox;
@@ -53,6 +58,7 @@ public class SpotInfoFragment extends Fragment {
         this.spot = spot;
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_spot_info, container, false);
@@ -118,11 +124,18 @@ public class SpotInfoFragment extends Fragment {
             }
         }
 
-        TextView t3 = v.findViewById(R.id.caracSpot);
-        if (spot.getCaracteristicas() == null) {
-            t3.setText("N/A");
-        } else {
-            t3.setText(spot.getCaracteristicas().toString());
+        TagsLayout t3 = v.findViewById(R.id.caracSpot);
+        if (spot.getCaracteristicas() != null) {
+            List<TagItem> tagItems = new ArrayList<>();
+            int i = 1;
+            for(String c: spot.getCaracteristicas()){
+                tagItems.add(new TagItem(i, c, getResources().getString(R.color.blue), getResources().getString(R.color.white), true));
+                i++;
+            }
+            t3.setViewMode(true);
+            t3.setTagTextSize(TagTextSize.SMALL);
+            t3.initializeTags(getActivity(), tagItems);
+
         }
 
         TextView t4 = v.findViewById(R.id.imageHeightSpot);
