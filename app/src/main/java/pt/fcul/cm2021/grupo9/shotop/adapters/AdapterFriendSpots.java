@@ -1,32 +1,75 @@
 package pt.fcul.cm2021.grupo9.shotop.adapters;
 
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
+import pt.fcul.cm2021.grupo9.shotop.MySpots.ListFriendSpotsFragment;
+import pt.fcul.cm2021.grupo9.shotop.MySpots.SpotInfoFragment;
+import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.databinding.ListLayoutSpotBinding;
+import pt.fcul.cm2021.grupo9.shotop.databinding.UserRowLayoutBinding;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
 
 public class AdapterFriendSpots extends RecyclerView.Adapter<AdapterFriendSpots.FriendSpotsViewHolder> {
 
     private List<Spot> spots = new ArrayList<>();
+    private Context context;
+
+
+
+    public static class FriendSpotsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        private final UserRowLayoutBinding binding;
+        private AdapterUser.ClickListener listener;
+
+        public FriendSpotsViewHolder(UserRowLayoutBinding binding, AdapterUser.ClickListener listener) {
+            super(binding.getRoot());
+            this.binding = binding;
+            this.listener = listener;
+
+            this.binding.btnShowSpot.setOnClickListener(this);
+
+        }
+
+        public UserRowLayoutBinding getBinding() {
+            return binding;
+        }
+
+        @Override
+        public void onClick(View view) {
+            listener.showSpots(this.getLayoutPosition());
+        }
+    }
 
     @NonNull
     @Override
     public FriendSpotsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new FriendSpotsViewHolder(ListLayoutSpotBinding.inflate(
-                LayoutInflater.from(parent.getContext()), parent, false)
-        );
+        return new AdapterFriendSpots.FriendSpotsViewHolder(UserRowLayoutBinding.inflate(
+                LayoutInflater.from(parent.getContext()), parent, false),
+                position -> {
+                    AppCompatActivity activity = (AppCompatActivity) context;
+                    ListFriendSpotsFragment fragment = new SpotInfoFragment(spots.get(position));
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.frameFragment, fragment)
+                            .commit();
+
+                });
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override

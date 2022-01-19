@@ -127,8 +127,20 @@ public class ComparatorFragment{
         if (ogPhoto.getExposureTime()==null && newPhoto.getExposureTime()==null){
             result +=onePerfectScore;
         }else if(ogPhoto.getExposureTime()!=null && newPhoto.getExposureTime()!=null){
-            String[] ogEpt = ogPhoto.getExposureTime().split("/");
-            String[] newEpt = newPhoto.getExposureTime().split("/");
+            String[] ogEpt;
+            String[] newEpt;
+            if(ogPhoto.getExposureTime().contains("/")){
+                ogEpt = ogPhoto.getExposureTime().split("/");
+            }else{
+                ogEpt = ogPhoto.getExposureTime().split(" ");
+            }
+            if(newPhoto.getExposureTime().contains("/")){
+                newEpt = ogPhoto.getExposureTime().split("/");
+            }else{
+                newEpt = ogPhoto.getExposureTime().split(" ");
+            }
+            System.out.println("1725");
+            System.out.println(ogEpt[0]);
             double ogEptt = Double.parseDouble(ogEpt[0]);
             double newEptt = Double.parseDouble(newEpt[0]);
 
