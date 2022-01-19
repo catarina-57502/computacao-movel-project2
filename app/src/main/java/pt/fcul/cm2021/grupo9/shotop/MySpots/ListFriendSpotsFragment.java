@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,10 +63,49 @@ public class ListFriendSpotsFragment extends Fragment {
                                         List<DocumentSnapshot> documents = t.getResult().getDocuments();
                                         spotList = new ArrayList<>();
 
-                                        documents.forEach(doc ->
-                                                spotList.add(
-                                                        new Spot((String) doc.getData().get("nome"),
-                                                                 (String) doc.getData().get("imagem"))));
+                                        for (DocumentSnapshot dc : documents) {
+                                            String id = dc.getId();
+                                            String nome = (String) dc.getData().get("nome");
+                                            String imagem = (String) dc.getData().get("imagem");
+                                            String apertureValue = (String) dc.getData().get("apertureValue");
+                                            String brightnessValue = (String) dc.getData().get("brightnessValue");
+                                            String contrast = (String) dc.getData().get("contrast");
+                                            String dateTime = (String) dc.getData().get("dateTime");
+                                            String detectedFileTypeName = (String) dc.getData().get("detectedFileTypeName");
+                                            String digitalZoomRatio = (String) dc.getData().get("digitalZoomRatio");
+                                            String exposureBiasValue = (String) dc.getData().get("exposureBiasValue");
+                                            String exposureTime = (String) dc.getData().get("exposureTime");
+                                            String fNumber = (String) dc.getData().get("fNumber");
+                                            String fileSize = (String) dc.getData().get("fileSize");
+                                            String flash = (String) dc.getData().get("flash");
+                                            String focalLength = (String) dc.getData().get("focalLength");
+                                            String iSOSpeedRatings = (String) dc.getData().get("iSOSpeedRatings");
+                                            String imageHeight = (String) dc.getData().get("imageHeight");
+                                            String imageWidth = (String) dc.getData().get("imageWidth");
+                                            GeoPoint loc = (GeoPoint) dc.getData().get("loc");
+                                            String maxApertureValue = (String) dc.getData().get("maxApertureValue");
+                                            String model = (String) dc.getData().get("model");
+                                            String orientation = (String) dc.getData().get("orientation");
+                                            String saturation = (String) dc.getData().get("saturation");
+                                            String sharpness = (String) dc.getData().get("sharpness");
+                                            String shutterSpeedValue = (String) dc.getData().get("shutterSpeedValue");
+                                            String whiteBalanceMode = (String) dc.getData().get("whiteBalanceMode");
+                                            ArrayList<String> caracteristicas = (ArrayList<String>) dc.getData().get("caracteristicas");
+                                            String idUser = (String) dc.getData().get("idUser");
+                                            boolean desafio = (boolean) dc.getData().get("desafio");
+
+                                            Spot sp = new Spot(
+                                                    id,nome,loc,imagem,caracteristicas,idUser,
+                                                    desafio, imageHeight,imageWidth,model,dateTime,
+                                                    orientation,fNumber,exposureTime,focalLength,
+                                                    flash,iSOSpeedRatings,whiteBalanceMode,apertureValue,
+                                                    shutterSpeedValue,detectedFileTypeName,fileSize,brightnessValue,
+                                                    exposureBiasValue,maxApertureValue,digitalZoomRatio,contrast,saturation,sharpness
+                                            );
+                                            spotList.add(sp);
+                                        }
+
+
 
                                         adapterFriendSpots = new AdapterFriendSpots(requireActivity());
                                         adapterFriendSpots.setSpots(spotList);

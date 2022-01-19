@@ -333,6 +333,7 @@ public class Spot {
         this.nome = nome;
     }
 
+
     public GeoPoint getLoc() {
         return loc;
     }
