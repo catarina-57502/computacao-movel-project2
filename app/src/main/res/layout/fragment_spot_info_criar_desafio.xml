@@ -26,17 +26,19 @@
                 <TextView
                     android:gravity="center"
                     android:textAlignment="center"
-
                     android:id="@+id/nameSpot"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="10dp"
                     android:textSize="25sp"/>
 
                 <ImageView
                     android:id="@+id/photoSpot"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginBottom="10dp"
                     android:scaleType="fitStart" />
 
@@ -44,13 +46,11 @@
             </LinearLayout>
 
 
-
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                >
+                android:layout_marginBottom="5dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -75,20 +75,13 @@
                 android:orientation="horizontal"
                 android:layout_marginBottom="5dp">
 
-                <TextView
+
+                <okqapps.com.tagslayout.TagsLayout
+                    android:id="@+id/caracSpot"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Características: "
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"/>
-
-                <TextView
-                    android:id="@+id/caracSpot"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-
+                    android:layout_centerInParent="true"
+                    android:gravity="left" />
 
             </LinearLayout>
 
@@ -369,7 +362,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Valor de velocidade do shutter: "
+                    android:text="Valor de Velocidade do Shutter: "
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="15sp"/>

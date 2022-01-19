@@ -56,6 +56,7 @@
             android:layout_margin="20dp"
             android:layout_width="200dp"
             android:layout_height="50dp"/>
+
         <ProgressBar
             android:id="@+id/progress_loader"
             style="?android:attr/progressBarStyle"
@@ -68,7 +69,7 @@
             android:id="@+id/continuarBtn"
             android:text="@string/continuar"
             android:layout_width="200dp"
-            android:layout_height="50dp"/>
+            android:layout_height="50dp" />
 
 
     </LinearLayout>
