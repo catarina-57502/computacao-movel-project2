@@ -1,13 +1,10 @@
 package pt.fcul.cm2021.grupo9.shotop.comparator;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -23,9 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.util.Base64;
 
 import pt.fcul.cm2021.grupo9.shotop.R;
@@ -38,7 +33,7 @@ public class ParticipateChallengeFragment extends Fragment {
     private View view;
     private Spot ogSpot;
     private Spot newSpot;
-    private ComparatorFragment comparatorFragment = new ComparatorFragment(); //precisa refactor disto
+    private Comparator comparator= new Comparator(); //precisa refactor disto
     private TextView score;
     private Desafio desafio;
 
@@ -64,7 +59,7 @@ public class ParticipateChallengeFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_participate_challenge, container, false);
         if(ogSpot != null && newSpot != null){
             score = view.findViewById(R.id.Score);
-            int result = (int) comparatorFragment.compareTwoSpots(ogSpot,newSpot);
+            int result = (int) comparator.compareTwoSpots(ogSpot,newSpot);
             score.setText( result +"%");
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
 

@@ -14,7 +14,7 @@ import java.util.Set;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class ComparatorFragment{
+public class Comparator {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss");
 
     public double compareTwoSpots(Spot ogPhoto, Spot newPhoto){
