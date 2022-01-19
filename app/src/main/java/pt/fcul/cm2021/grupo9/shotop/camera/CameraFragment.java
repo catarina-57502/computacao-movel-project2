@@ -46,6 +46,7 @@ import pt.fcul.cm2021.grupo9.shotop.desafio.DesafioCamerasFragment;
 import pt.fcul.cm2021.grupo9.shotop.desafio.SpotTools;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
 import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
+import pt.fcul.cm2021.grupo9.shotop.main.MainActivity;
 import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.StartAddFragment;
 
 public class CameraFragment extends Fragment {
@@ -62,6 +63,8 @@ public class CameraFragment extends Fragment {
     }
 
     public CameraFragment(Spot spot){
+        MainActivity.spotOriginal = spot;
+
         spotOriginal = spot;
 
 
@@ -70,8 +73,6 @@ public class CameraFragment extends Fragment {
         byte[] bytes = Base64.getDecoder().decode(img);
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
-        System.out.println(bitmap.getHeight());
-        System.out.println(bitmap.getWidth());
 
         spotOriginal.setImageHeight("1920");
         spotOriginal.setImageWidth("1080");
@@ -197,11 +198,7 @@ public class CameraFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void removeView() {
-
-
         viewControl.setVisibility(View.GONE);
-
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     int MEDIA_TYPE_IMAGE = 1;
@@ -210,6 +207,7 @@ public class CameraFragment extends Fragment {
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
             File pictureFile = null;
             try {
@@ -218,6 +216,7 @@ public class CameraFragment extends Fragment {
                 e.printStackTrace();
             }
             try {
+
                 if (spotOriginal.getOrientation() == "Vertical") {
                     Bitmap bitmap = BitmapTools.toBitmap(data);
                     bitmap = BitmapTools.rotate(bitmap, 90);
@@ -231,14 +230,19 @@ public class CameraFragment extends Fragment {
             } catch (IOException e) {
 
             }finally {
-                System.out.println("111111111111111111111111111111");
-                System.out.println(spotOriginal);
+
                 Spot spotParticipacao = SpotTools.runAll(currentPhotoPath);
-                System.out.println(spotParticipacao);
+
+                spotParticipacao.setImagem(data);
+                MainActivity.spotParticipacao = spotParticipacao;
+
+                MainActivity.spotParticipacao = spotParticipacao;
+
                 removeView();
+
                 getParentFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.frameFragment, new ParticipateChallengeFragment(spotOriginal,spotParticipacao))
+                        .replace(R.id.frameFragment, new ParticipateChallengeFragment(MainActivity.spotOriginal,MainActivity.spotParticipacao))
                         .commit();
             }
         }

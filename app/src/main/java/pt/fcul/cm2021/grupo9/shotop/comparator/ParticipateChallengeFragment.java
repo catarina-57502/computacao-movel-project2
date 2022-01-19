@@ -1,5 +1,6 @@
 package pt.fcul.cm2021.grupo9.shotop.comparator;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -35,14 +36,16 @@ public class ParticipateChallengeFragment extends Fragment {
     FirebaseUser firebaseUser;
 
     public ParticipateChallengeFragment() {
-        // Required empty public constructor
+        this.ogSpot = MainActivity.spotOriginal;
+        this.newSpot = MainActivity.spotParticipacao;
     }
 
     public ParticipateChallengeFragment(Spot ogSpot, Spot newSpot) {
 
-        this.ogSpot = ogSpot;
-        this.newSpot = newSpot;
+        this.ogSpot = MainActivity.spotOriginal;
+        this.newSpot = MainActivity.spotParticipacao;
     }
+
 
 
     @Override
@@ -52,9 +55,10 @@ public class ParticipateChallengeFragment extends Fragment {
         if(ogSpot != null && newSpot != null){
             score = view.findViewById(R.id.Score);
             int result = (int) comparatorFragment.compareTwoSpots(ogSpot,newSpot);
-            System.out.println(result);
             score.setText( result +"%");
-            desafio = new Desafio(newSpot.getImagem(),ogSpot.getId(), ogSpot.getIdUser(), newSpot.getIdUser(), Integer.toString(result));
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+            desafio = new Desafio(newSpot.getImagem(),ogSpot.getId(), ogSpot.getIdUser(), mAuth.getCurrentUser().getUid(), Integer.toString(result));
         }
 
 

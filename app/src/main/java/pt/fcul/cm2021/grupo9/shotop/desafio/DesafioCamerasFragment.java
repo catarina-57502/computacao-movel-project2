@@ -1,6 +1,8 @@
 package pt.fcul.cm2021.grupo9.shotop.desafio;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -16,6 +18,7 @@ import android.widget.Button;
 
 import com.google.firebase.firestore.GeoPoint;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -27,6 +30,7 @@ import pt.fcul.cm2021.grupo9.shotop.camera.CameraFragment;
 import pt.fcul.cm2021.grupo9.shotop.comparator.ParticipateChallengeFragment;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
 import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
+import pt.fcul.cm2021.grupo9.shotop.main.MainActivity;
 import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.CheckPhotoFragment;
 
 public class DesafioCamerasFragment extends Fragment {
@@ -42,6 +46,7 @@ public class DesafioCamerasFragment extends Fragment {
     }
 
     public DesafioCamerasFragment(Spot s){
+        MainActivity.spotOriginal = s;
         this.spotOriginal = s;
     }
 
@@ -121,12 +126,21 @@ public class DesafioCamerasFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE && cam1) {
-            System.out.println("222222222222222222222222222222222222222222222222");
+            Bitmap bm = BitmapFactory.decodeFile(currentPhotoPath);
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.JPEG, 60, stream);
+            byte[] byteArray = stream.toByteArray();
+
+
+
             Spot spotParticipacao = SpotTools.runAll(currentPhotoPath);
-            System.out.println(spotParticipacao);
+            spotParticipacao.setImagem(byteArray);
+            MainActivity.spotParticipacao = spotOriginal;
+            MainActivity.spotParticipacao = spotParticipacao;
             getParentFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.frameFragment, new ParticipateChallengeFragment(spotOriginal,spotParticipacao))
+                    .replace(R.id.frameFragment, new ParticipateChallengeFragment(MainActivity.spotOriginal,MainActivity.spotParticipacao))
                     .commit();
         }
 

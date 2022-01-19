@@ -56,6 +56,9 @@ public class MainActivity extends AppCompatActivity   {
     public static ArrayList<Spot> spots = new ArrayList<Spot>();
 
 
+    public static Spot spotOriginal;
+    public static Spot spotParticipacao;
+
 
 
     @Override
