@@ -79,6 +79,7 @@ public class VisionPhotoFragment extends Fragment {
                     String id = firebaseUser.getUid();
                     spot.setIdUser(id);
                 }
+                spot.setDesafio(false);
                 submit();
                 getParentFragmentManager()
                         .beginTransaction()
@@ -156,7 +157,6 @@ public class VisionPhotoFragment extends Fragment {
                 listaCarac.add(vr.description);
             }
             spot.setCaracteristicas(listaCarac);
-            spot.setDesafio(false);
             AdapterListCheckBox adapter = new AdapterListCheckBox(listVR,getContext());
             lv.setAdapter(adapter);
         } catch (InterruptedException e) {
