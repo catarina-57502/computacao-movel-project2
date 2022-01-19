@@ -49,6 +49,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import pt.fcul.cm2021.grupo9.shotop.MySpots.ListSpotsFragment;
 import pt.fcul.cm2021.grupo9.shotop.adapters.AdapterSpot;
@@ -292,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialogFr
                     }
                 });
     }
-}
+
 
 
     public void getAllUsersDB () {
@@ -303,13 +304,13 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialogFr
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                String id = document.getId();
-                                String nome = (String) document.getData().get("nome");
-                                String email = (String) document.getData().get("email");
-                                User user = new User(id,nome,email);
-                                users.add(user);
+                            List<DocumentSnapshot> ds = task.getResult().getDocuments();
+                            for(DocumentSnapshot d: ds){
+                                User u = d.toObject(User.class);
+                                u.setIdNoBD(d.getId());
+                                users.add(u);
                             }
+
                         } else {
                             Log.d("TAG", "Error getting documents: ", task.getException());
                         }

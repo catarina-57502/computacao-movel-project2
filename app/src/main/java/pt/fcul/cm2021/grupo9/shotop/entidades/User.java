@@ -58,6 +58,10 @@ public class User {
         return id;
     }
 
+    public void setIdNoBD(String id){
+       this.id = id;
+    }
+
     public void setAmigos(List<User> amigos) {
         this.amigos = amigos;
     }
