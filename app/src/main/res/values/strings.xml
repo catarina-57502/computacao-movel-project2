@@ -46,4 +46,6 @@
     <string name="desafio">DESAFIO</string>
     <string name="btnCamera1">Camera Default</string>
     <string name="btnCamera2">Sobrepor a imagem</string>
+    <string name="criar_desafio">Criar desafio</string>
+    <string name="desafio_criado">Desafio a decorrer</string>
 </resources>

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -28,6 +29,7 @@ import java.util.Base64;
 import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.adapters.AdapterListCheckBox;
 import pt.fcul.cm2021.grupo9.shotop.adapters.AdapterSpot;
+import pt.fcul.cm2021.grupo9.shotop.desafio.SpotInfoCriarDesafioFragment;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
 import pt.fcul.cm2021.grupo9.shotop.main.MainActivity;
 
@@ -102,11 +104,29 @@ public class ListSpotsFragment extends Fragment {
                             ListView listv = v.findViewById(R.id.listViewSpots);
                             AdapterSpot adapter = new AdapterSpot(mySpots,getContext());
                             listv.setAdapter(adapter);
+                            listv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int
+                                        position, long id) {
+
+                                    Spot spotClicked = (Spot) listv.getItemAtPosition(position);
+
+                                    for(Spot s: mySpots){
+                                        if(s.getId().equals(spotClicked.getId())){
+                                            getParentFragmentManager()
+                                                    .beginTransaction()
+                                                    .replace(R.id.frameFragment, new SpotInfoCriarDesafioFragment(spotClicked))
+                                                    .commit();
+                                        }
+                                    }
+
+                                }
+                            });
                         } else {
                             Log.d("TAG", "Error getting documents: ", task.getException());
                         }
                     }});
-      return;
+
     }
 
 }

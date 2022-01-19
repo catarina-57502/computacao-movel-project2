@@ -17,7 +17,7 @@ public class Spot {
     String imagem;
     List<String> caracteristicas;
     String idUser;
-
+    boolean desafio = false;
     String imageHeight;
     String imageWidth;
     String model;
@@ -100,6 +100,22 @@ public class Spot {
         this.contrast = contrast;
         this.saturation = saturation;
         this.sharpness = sharpness;
+    }
+
+    public boolean isDesafio() {
+        return desafio;
+    }
+
+    public void setDesafio(boolean desafio) {
+        this.desafio = desafio;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getIdUser() {
