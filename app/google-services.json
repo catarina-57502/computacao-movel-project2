@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "390665430281-74epg8il6o5rbib0ovgvnu1folhainfv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pt.fcul.cm2021.grupo9.shotop",
+            "certificate_hash": "fd9e0e216a377b1773b5e00fa1edcdfb5a71f820"
+          }
+        },
+        {
           "client_id": "390665430281-m37rtup5v3umil42685u7c7fd3obk852.apps.googleusercontent.com",
           "client_type": 3
         }

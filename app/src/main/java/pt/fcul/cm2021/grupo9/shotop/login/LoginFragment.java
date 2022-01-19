@@ -71,6 +71,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
+        System.out.println(mGoogleSignInClient.getApiKey());
         // [END config_signin]
 
         // Initialize Firebase Auth
@@ -196,11 +197,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private void loginWithGoogle() {
 
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        System.out.println("login2");
         startActivityForResult(signInIntent, RC_SIGN_IN_GOOGLE);
     }
 
     private void firebaseAuthWithGoogle(String idToken) {
-
+        System.out.println("login3333");
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(requireActivity(), task -> {
@@ -210,6 +212,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
                         submit();
                     }
+                    if(!task.isSuccessful()){
+                        System.out.println(task.getException());
+                    }
+                    System.out.println("login");
+                    System.out.println(task.getException());
                     // If sign in fails, display a message to the user.
                     updateUI();
                 });
@@ -249,7 +256,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
-                // Empty body
+               e.printStackTrace();
             }
         }
         else {

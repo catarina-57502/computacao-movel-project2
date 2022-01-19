@@ -177,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements AddFriendDialogFr
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frameFragment);
         if (fragment != null) {
             fragment.onActivityResult(requestCode, resultCode, data);
+            System.out.println("fragmentttttttttttt");
         }
     }
 
