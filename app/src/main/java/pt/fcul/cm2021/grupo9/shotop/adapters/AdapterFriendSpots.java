@@ -19,6 +19,7 @@ import java.util.List;
 import pt.fcul.cm2021.grupo9.shotop.MySpots.ListFriendSpotsFragment;
 import pt.fcul.cm2021.grupo9.shotop.MySpots.SpotInfoFragment;
 import pt.fcul.cm2021.grupo9.shotop.R;
+import pt.fcul.cm2021.grupo9.shotop.databinding.ListLayoutBinding;
 import pt.fcul.cm2021.grupo9.shotop.databinding.ListLayoutSpotBinding;
 import pt.fcul.cm2021.grupo9.shotop.databinding.UserRowLayoutBinding;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
@@ -28,48 +29,29 @@ public class AdapterFriendSpots extends RecyclerView.Adapter<AdapterFriendSpots.
     private List<Spot> spots = new ArrayList<>();
     private Context context;
 
+    public AdapterFriendSpots() {
 
+    }
 
-    public static class FriendSpotsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        private final UserRowLayoutBinding binding;
-        private AdapterUser.ClickListener listener;
-
-        public FriendSpotsViewHolder(UserRowLayoutBinding binding, AdapterUser.ClickListener listener) {
-            super(binding.getRoot());
-            this.binding = binding;
-            this.listener = listener;
-
-            this.binding.btnShowSpot.setOnClickListener(this);
-
-        }
-
-        public UserRowLayoutBinding getBinding() {
-            return binding;
-        }
-
-        @Override
-        public void onClick(View view) {
-            listener.showSpots(this.getLayoutPosition());
-        }
+    public AdapterFriendSpots(Context context) {
+        this.context = context;
     }
 
     @NonNull
     @Override
     public FriendSpotsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new AdapterFriendSpots.FriendSpotsViewHolder(UserRowLayoutBinding.inflate(
+        return new FriendSpotsViewHolder(ListLayoutSpotBinding.inflate(
                 LayoutInflater.from(parent.getContext()), parent, false),
                 position -> {
                     AppCompatActivity activity = (AppCompatActivity) context;
-                    ListFriendSpotsFragment fragment = new SpotInfoFragment(spots.get(position));
+                    SpotInfoFragment fragment = new SpotInfoFragment(spots.get(position));
                     activity.getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.frameFragment, fragment)
                             .commit();
-
-                });
+                }
+        );
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -93,17 +75,30 @@ public class AdapterFriendSpots extends RecyclerView.Adapter<AdapterFriendSpots.
         notifyDataSetChanged();
     }
 
-    public class FriendSpotsViewHolder extends RecyclerView.ViewHolder {
+    public class FriendSpotsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final ListLayoutSpotBinding binding;
+        private ClickListener listener;
 
-        public FriendSpotsViewHolder(ListLayoutSpotBinding binding) {
+        public FriendSpotsViewHolder(ListLayoutSpotBinding binding, ClickListener listener) {
             super(binding.getRoot());
             this.binding = binding;
+            this.listener = listener;
+
+            this.binding.imageView.setOnClickListener(this);
         }
 
         public ListLayoutSpotBinding getBinding() {
             return binding;
         }
+
+        @Override
+        public void onClick(View view) {
+            listener.showChallenge(this.getLayoutPosition());
+        }
+    }
+
+    public interface ClickListener {
+        void showChallenge(int position);
     }
 }

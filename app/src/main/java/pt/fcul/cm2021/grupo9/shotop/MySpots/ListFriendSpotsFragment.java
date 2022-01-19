@@ -66,7 +66,7 @@ public class ListFriendSpotsFragment extends Fragment {
                                                         new Spot((String) doc.getData().get("nome"),
                                                                  (String) doc.getData().get("imagem"))));
 
-                                        adapterFriendSpots = new AdapterFriendSpots();
+                                        adapterFriendSpots = new AdapterFriendSpots(requireActivity());
                                         adapterFriendSpots.setSpots(spotList);
 
                                         binding.rvFriendSpots.setAdapter(adapterFriendSpots);
