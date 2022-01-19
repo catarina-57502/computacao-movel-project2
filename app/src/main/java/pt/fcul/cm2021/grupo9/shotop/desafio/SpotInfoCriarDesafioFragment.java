@@ -55,7 +55,7 @@ public class SpotInfoCriarDesafioFragment extends Fragment {
         ImageView imgView = v.findViewById(R.id.photoSpot);
 
         Button btn = (Button) v.findViewById(R.id.butCriarDesafio);
-        System.out.println("DESAFIO " + spot.isDesafio());
+
 
         if(spot.isDesafio()){
             btn.setText(R.string.terminar_desafio);

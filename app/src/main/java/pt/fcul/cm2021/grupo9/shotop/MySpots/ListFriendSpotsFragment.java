@@ -50,7 +50,7 @@ public class ListFriendSpotsFragment extends Fragment {
                     if(task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult().getDocuments().get(0);
                         userID = document.getId();
-                        System.out.println(userID);
+
 
                         spotCollection.whereEqualTo("idUser", userID).get().addOnCompleteListener(
                                 t -> {

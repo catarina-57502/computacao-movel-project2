@@ -139,8 +139,7 @@ public class Comparator {
             }else{
                 newEpt = ogPhoto.getExposureTime().split(" ");
             }
-            System.out.println("1725");
-            System.out.println(ogEpt[0]);
+
             double ogEptt = Double.parseDouble(ogEpt[0]);
             double newEptt = Double.parseDouble(newEpt[0]);
 

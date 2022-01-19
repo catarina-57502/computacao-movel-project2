@@ -313,11 +313,9 @@ public class SpotInfoFragment extends Fragment {
                                 String idUserParticipante = (String) document.getData().get("idUserParticipante");
                                 String score = (String) document.getData().get("score");
                                 Desafio ds = new Desafio(fotoParticipacao,idSpot,idUserOriginal,idUserParticipante,score);
-                                System.out.println("desafio");
-                                System.out.println(idSpot);
-                                System.out.println(spot.getId());
+
                                 if(ds.getIdSpot().equals(spot.getId())){
-                                    System.out.println("entrei");
+
                                     spotsDesafio.add(ds);
                                 }
 

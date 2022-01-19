@@ -128,7 +128,6 @@ public class StartAddFragment extends Fragment  {
             photoFile = createImageFile();
         } catch (IOException ex) {
             // Error occurred while creating the File
-            System.out.println("ERRO");
         }
         // Continue only if the File was successfully created
         if (photoFile != null) {

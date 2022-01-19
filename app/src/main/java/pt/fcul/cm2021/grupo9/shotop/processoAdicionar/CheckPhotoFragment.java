@@ -123,8 +123,7 @@ public class CheckPhotoFragment extends Fragment {
 
                 for (Directory directory : metadata.getDirectories()) {
                     for (Tag tag : directory.getTags()) {
-                        System.out.println(tag.getTagName());
-                        System.out.println(tag.getDescription());
+
 
                         checkCategoria(tag.getTagName(),tag.getDescription());
                     }
