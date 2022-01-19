@@ -8,9 +8,13 @@ public class User {
     String nome;
     String email;
 
-    List<String> amigos;
+    List<User> amigos;
 
-    public User(String id, String nome, String email, List<String> amigos) {
+    public User() {
+
+    }
+
+    public User(String id, String nome, String email, List<User> amigos) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -46,11 +50,11 @@ public class User {
         this.email = email;
     }
 
-    public List<String> getAmigos() {
+    public List<User> getAmigos() {
         return amigos;
     }
 
-    public void setAmigos(ArrayList<String> amigos) {
+    public void setAmigos(List<User> amigos) {
         this.amigos = amigos;
     }
 

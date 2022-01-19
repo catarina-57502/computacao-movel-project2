@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,19 +16,25 @@ import androidx.fragment.app.Fragment;
 import com.facebook.login.LoginManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 
+import pt.fcul.cm2021.grupo9.shotop.community.AddFriendDialogFragment;
 import pt.fcul.cm2021.grupo9.shotop.MySpots.ListSpotsFragment;
-import pt.fcul.cm2021.grupo9.shotop.camera.CameraFragment;
 import pt.fcul.cm2021.grupo9.shotop.community.CommunityFragment;
+import pt.fcul.cm2021.grupo9.shotop.entidades.User;
 import pt.fcul.cm2021.grupo9.shotop.login.LoginFragment;
 import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
 import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.StartAddFragment;
 
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity implements AddFriendDialogFragment.AddFriendDialogFragmentListener  {
 
     public static final String TAG_MAPS = "MAPS";
     public static final String TAG_LOGIN = "LOGIN";
@@ -154,5 +162,30 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
 
+    @Override
+    public void addFriend(String friend) {
 
+        Query query = db.collection("User").whereEqualTo("email", friend);
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                boolean friendExists = !task.getResult().isEmpty();
+
+                if(friendExists) {
+
+                    DocumentSnapshot fDocument = task.getResult().getDocuments().get(0);
+                    User friendUser = fDocument.toObject(User.class);
+
+                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                    DocumentReference docRef = db.collection("User").document(firebaseUser.getUid());
+
+                    docRef.update("amigos", FieldValue.arrayUnion(friendUser));
+                }
+                else
+                    Toast.makeText(this, "User doesn't exist!", Toast.LENGTH_SHORT).show();
+
+            }  else {
+                Log.d("SHOTOP", "Error getting documents: ", task.getException());
+            }
+        });
+    }
 }

@@ -23,6 +23,7 @@ public class AdapterUser extends RecyclerView.Adapter<AdapterUser.UserViewHolder
         public UserViewHolder(UserRowLayoutBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+
         }
 
         public UserRowLayoutBinding getBinding() {
@@ -34,15 +35,14 @@ public class AdapterUser extends RecyclerView.Adapter<AdapterUser.UserViewHolder
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new UserViewHolder(UserRowLayoutBinding.inflate(
-                LayoutInflater.from(parent.getContext()),
-                parent,
-                false)
-        );
+                LayoutInflater.from(parent.getContext()), parent, false));
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         holder.getBinding().tvUserName.setText(users.get(position).getNome());
+
     }
 
     @Override

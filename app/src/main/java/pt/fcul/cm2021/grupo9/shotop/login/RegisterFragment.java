@@ -23,7 +23,9 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -40,6 +42,11 @@ import pt.fcul.cm2021.grupo9.shotop.main.MainActivity;
 public class RegisterFragment extends Fragment {
 
     private FirebaseAuth mAuth;
+    private FirebaseUser firebaseUser;
+
+    private String displayName;
+
+    private final CollectionReference user = MainActivity.db.collection("User");
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +72,7 @@ public class RegisterFragment extends Fragment {
             EditText etPassword = view.findViewById(R.id.et_password);
             EditText etConfirmPassword = view.findViewById(R.id.et_password2);
 
-            String name = etName.getText().toString();
+            displayName = etName.getText().toString();
             String email = etEmail.getText().toString();
             String password = etPassword.getText().toString();
             String confirmPassword = etConfirmPassword.getText().toString();
@@ -75,23 +82,24 @@ public class RegisterFragment extends Fragment {
             else if(!password.equals(confirmPassword))
                 Toast.makeText(requireActivity(), "Passwords don't match!", Toast.LENGTH_SHORT).show();
             else
-                createAccount(name, email, password);
+                createAccount(email, password);
         });
 
         return view;
     }
 
-    private void createAccount(String name, String email, String password) {
+    private void createAccount(String email, String password) {
 
         // [START create_user_with_email]
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(requireActivity(), task -> {
-                    if (task.isSuccessful()) {
+                    if(task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        User u = new User(user.getProviderId(), name, user.getEmail());
-                        submit(u);
-                        updateUI(user);
+                        firebaseUser = mAuth.getCurrentUser();
+
+                        User newUser = new User(displayName, firebaseUser.getEmail());
+                        user.document(firebaseUser.getUid()).set(newUser);
+
                     } else {
                         try {
                             throw task.getException();
@@ -104,39 +112,21 @@ public class RegisterFragment extends Fragment {
                         } catch(Exception e) {
                             Toast.makeText(requireActivity(), "Unexpected error!", Toast.LENGTH_SHORT).show();
                         }
-                        // If sign in fails, display a message to the user.
-                        updateUI(null);
                     }
+                    // If sign in fails, display a message to the user.
+                    updateUI();
                 });
         // [END create_user_with_email]
     }
 
-    private void updateUI(FirebaseUser user) {
+    private void updateUI() {
 
-        if(user != null)
+        if(firebaseUser != null)
         {
             getParentFragmentManager()
                     .beginTransaction()
                     .replace(R.id.frameFragment, new MapaFragment())
                     .commit();
         }
-    }
-
-    private void submit(User user) {
-
-        MainActivity.db.collection("User")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d("SHOTOP", "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("SHOTOP", "Error adding document", e);
-                    }
-                });
     }
 }
