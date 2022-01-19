@@ -12,7 +12,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-   <LinearLayout
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="#F0504E4B"
+        android:enabled="false"
+        android:gravity="center"
+        android:paddingVertical="10dp"
+        android:textColor="#FAFAFA"
+        android:textSize="20sp"
+        android:visibility="invisible" />
+
+    <LinearLayout
        android:layout_margin="20dp"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
@@ -20,13 +33,15 @@
 
        android:layout_gravity="top |center">
 
-       <SearchView
+        <SearchView
 
            android:id="@+id/searchView"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:iconifiedByDefault="false"
-           android:queryHint="Search Here" />
+           android:queryHint="Search Here" >
+
+       </SearchView>
 
    </LinearLayout>
 

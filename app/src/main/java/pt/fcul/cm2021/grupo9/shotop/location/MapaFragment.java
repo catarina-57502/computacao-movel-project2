@@ -28,7 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -65,6 +65,7 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
     ArrayList<Marker> myMarkers = new ArrayList<Marker>();
     MapView mMapView;
     SearchView searchView;
+    TextView textview;
     private GoogleMap googleMap;
     public final static double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
 
@@ -147,7 +148,7 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
         });
 
 
-
+        textview = rootView.findViewById(R.id.textView4);
         searchView = rootView.findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -158,7 +159,6 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
                if (searchView.getQuery().length() == 0) {
                     showAllMarkers();
                 }
@@ -187,13 +187,18 @@ public class MapaFragment extends Fragment implements OnLocationChangedListener 
                 }
                 if(resultingSpots!=0){ //foi enonctrado spots, alterar zoom
                     googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(lastLocation , 12) );
-                }else{ // este nao tá a aparecer atm
-                    Toast tst = Toast.makeText(getApplicationContext(),"Num raio de 5km não foram encontrados resultados :(",Toast.LENGTH_SHORT);
+                }else{
+                    textview.setText("Num raio de 5km, não foram encontradas fotos com a tag \"" +query.toString() + "\"");
+                    textview.setVisibility(View.VISIBLE);
+
+                    textview.postDelayed(new Runnable() {
+                        public void run() {
+                            textview.setVisibility(View.INVISIBLE);
+                        }
+                    }, 2500);
+
                 }
-
-
             }
-
         });
 
         return rootView;
