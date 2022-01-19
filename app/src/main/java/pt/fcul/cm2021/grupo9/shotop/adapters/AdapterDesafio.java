@@ -90,7 +90,7 @@ public class AdapterDesafio extends BaseAdapter {
         byte[] bytes = Base64.getDecoder().decode(desafios.get(position).getFotoParticipacao());
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 1, baos);
         imageView.setImageBitmap(bitmap);
 
         return convertView;

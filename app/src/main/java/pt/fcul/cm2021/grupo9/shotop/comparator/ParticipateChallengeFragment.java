@@ -1,6 +1,9 @@
 package pt.fcul.cm2021.grupo9.shotop.comparator;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,8 +23,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.Base64;
+
 import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
+import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
 import pt.fcul.cm2021.grupo9.shotop.main.MainActivity;
 
 public class ParticipateChallengeFragment extends Fragment {
@@ -48,6 +57,7 @@ public class ParticipateChallengeFragment extends Fragment {
 
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -57,6 +67,10 @@ public class ParticipateChallengeFragment extends Fragment {
             int result = (int) comparatorFragment.compareTwoSpots(ogSpot,newSpot);
             score.setText( result +"%");
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+
+            comprimir();
+
 
             desafio = new Desafio(newSpot.getImagem(),ogSpot.getId(), ogSpot.getIdUser(), mAuth.getCurrentUser().getUid(), Integer.toString(result));
         }
@@ -75,6 +89,14 @@ public class ParticipateChallengeFragment extends Fragment {
       return view;
     }
 
+    public void comprimir(){
+        byte[] bytes = Base64.getDecoder().decode(newSpot.getImagem());
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos);
+        newSpot.setImagem(baos.toByteArray());
+    }
+
     private void submitEntry(Desafio desafio) {
         MainActivity.db.collection("Desafio")
                 .add(desafio)
@@ -82,12 +104,21 @@ public class ParticipateChallengeFragment extends Fragment {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d("SHOTOP", "DocumentSnapshot added with ID: " + documentReference.getId());
+
+                        getParentFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.frameFragment, new MapaFragment())
+                                .commit();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w("SHOTOP", "Error adding document", e);
+                        getParentFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.frameFragment, new MapaFragment())
+                                .commit();
                     }
                 });
     }

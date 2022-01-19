@@ -236,7 +236,7 @@ public class CheckPhotoFragment extends Fragment {
         }
 
 
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 65, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
         byte[] byteArray = stream.toByteArray();
         spot.setImagem(byteArray);
 
