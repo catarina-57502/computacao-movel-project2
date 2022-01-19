@@ -54,6 +54,10 @@ public class User {
         return amigos;
     }
 
+    public String getIdNoBD(){
+        return id;
+    }
+
     public void setAmigos(List<User> amigos) {
         this.amigos = amigos;
     }

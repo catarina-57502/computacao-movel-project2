@@ -1,6 +1,9 @@
 package pt.fcul.cm2021.grupo9.shotop.comparator;
 
-public class Desafio {
+
+import java.util.Comparator;
+
+public class Desafio  {
     private String id;
     private String fotoParticipacao;
     private String idSpot;
@@ -59,9 +62,25 @@ public class Desafio {
         return score;
     }
 
+    public int getScoreInt() {
+        try{
+            int score = Integer.parseInt(getScore());
+            return score;
+        }
+        catch (NumberFormatException ex){
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
     public void setScore(String score) {
         this.score = score;
     }
+
+
+
+
+
 }
 
 

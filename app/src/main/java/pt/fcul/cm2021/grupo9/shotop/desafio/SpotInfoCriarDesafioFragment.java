@@ -54,20 +54,27 @@ public class SpotInfoCriarDesafioFragment extends Fragment {
         System.out.println("DESAFIO " + spot.isDesafio());
 
         if(spot.isDesafio()){
-            btn.setText(R.string.desafio_criado);
-            btn.setEnabled(false);
+            btn.setText(R.string.terminar_desafio);
         }else{
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            btn.setText(R.string.criar_desafio);
+        }
+
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (spot.isDesafio()) {
+                    btn.setText(R.string.criar_desafio);
+                    MainActivity.db.collection("Spot").document(spot.getId()).update("desafio", false);
+                    Toast.makeText(getActivity(), "Desafio Terminado!", Toast.LENGTH_SHORT).show();
+                } else {
+                    btn.setText(R.string.terminar_desafio);
                     MainActivity.db.collection("Spot").document(spot.getId()).update("desafio", true);
                     Toast.makeText(getActivity(), "Criou um desafio para esta foto!", Toast.LENGTH_SHORT).show();
-                    btn.setText(R.string.desafio_criado);
-                    btn.setEnabled(false);
                 }
-            });
-        }
-        
+            }
+        });
+
 
         if (spot.getImagem() != null) {
 

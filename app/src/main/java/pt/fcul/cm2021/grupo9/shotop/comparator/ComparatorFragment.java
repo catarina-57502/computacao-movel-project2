@@ -31,8 +31,6 @@ public class ComparatorFragment{
 
 
     private double compareDateTime(Spot ogPhoto, Spot newPhoto){ //20
-        System.out.println("44444444444444444444444444444");
-        System.out.println(ogPhoto.getDateTime());
         LocalDateTime ogPhotoDateTime = LocalDateTime.parse(ogPhoto.getDateTime(),formatter);
         LocalDateTime newPhotoDateTime = LocalDateTime.parse(newPhoto.getDateTime(),formatter);
         double result = 0;

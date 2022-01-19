@@ -589,10 +589,11 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
+
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="50dp">
 
                 <Button
                     android:id="@+id/butDesafio"
@@ -600,8 +601,14 @@
                     android:gravity="center"
                     android:layout_gravity="center"
                     android:layout_height="wrap_content"
-                    android:text="@string/participar"
-                    />
+                    android:text="@string/participar" />
+
+
+                <ListView
+                    android:layout_width="wrap_content"
+                    android:layout_height="300dp"
+                    android:id="@+id/listDesafiosInfo"/>
+
 
             </LinearLayout>
 
