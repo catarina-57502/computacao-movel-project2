@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.firestore.GeoPoint;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -23,10 +25,13 @@ import pt.fcul.cm2021.grupo9.shotop.MySpots.SpotInfoFragment;
 import pt.fcul.cm2021.grupo9.shotop.R;
 import pt.fcul.cm2021.grupo9.shotop.camera.CameraFragment;
 import pt.fcul.cm2021.grupo9.shotop.entidades.Spot;
+import pt.fcul.cm2021.grupo9.shotop.location.MapaFragment;
+import pt.fcul.cm2021.grupo9.shotop.processoAdicionar.CheckPhotoFragment;
 
 public class DesafioCamerasFragment extends Fragment {
 
     public Spot spotOriginal;
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
 
     Uri photoURI;
 
@@ -35,7 +40,7 @@ public class DesafioCamerasFragment extends Fragment {
     }
 
     public DesafioCamerasFragment(Spot s){
-        s = spotOriginal;
+        this.spotOriginal = s;
     }
 
     @Override
@@ -47,10 +52,7 @@ public class DesafioCamerasFragment extends Fragment {
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getParentFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.frameFragment, new DesafioCamerasFragment())
-                        .commit();
+                dispatchTakePictureIntent();
             }
         });
 
@@ -59,7 +61,10 @@ public class DesafioCamerasFragment extends Fragment {
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dispatchTakePictureIntent();
+                getParentFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frameFragment, new CameraFragment(spotOriginal))
+                        .commit();
             }
         });
 
@@ -107,6 +112,19 @@ public class DesafioCamerasFragment extends Fragment {
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            Spot spotParticipacao = SpotTools.runAll(currentPhotoPath);
+            System.out.println(spotParticipacao);
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frameFragment, new MapaFragment())
+                    .commit();
+        }
+
     }
 
 }

@@ -6,6 +6,9 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
 
@@ -54,9 +57,9 @@ public class MainActivity extends AppCompatActivity   {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
 
 
 
@@ -113,16 +116,7 @@ public class MainActivity extends AppCompatActivity   {
             }
 
             if (id == R.id.community) {
-                for(Spot i : spots){
-                    if (i.getNome().equals("policia22")){
-                        System.out.println("oi");
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.frameFragment, new CameraFragment(i))
-                                .commit();
-                    }
 
-                }
             }
 
             if (id == R.id.CameraOverlay) {
